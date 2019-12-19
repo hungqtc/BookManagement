@@ -16,5 +16,5 @@ import lombok.Setter;
 @Data
 public class RoleDTO extends BaseDTO{
 	private String name;
-	ArrayList<String> users = new ArrayList<String>();
+	ArrayList<String> users = new ArrayList();
 }

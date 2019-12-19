@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hung.jwt.JwtTokenProvider;
-import com.hung.payload.LoginRequest;
-import com.hung.payload.LoginResponse;
-import com.hung.security.CustomUserDetails;
+import com.hung.config.jwt.JwtTokenProvider;
+import com.hung.config.security.CustomUserDetails;
+import com.hung.dto.payload.LoginRequest;
+import com.hung.dto.payload.LoginResponse;
 import com.hung.service.UserService;
 
 @RestController

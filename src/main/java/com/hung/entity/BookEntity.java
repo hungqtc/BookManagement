@@ -42,10 +42,6 @@ public class BookEntity extends BaseEntity {
 	@Column(name = "status")
 	private int status;
 
-	/*
-	 * @Column(name = "user_id") private int userId;
-	 */
-
 	@OneToMany(mappedBy = "book")
 	private List<CommentEntity> comments = new ArrayList<CommentEntity>();
 

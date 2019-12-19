@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hung.dto.UserDTO;
+import com.hung.handlers.exceptions.BookExistionException;
+import com.hung.handlers.exceptions.UserExistionException;
 import com.hung.service.UserService;
 
 
@@ -42,7 +44,7 @@ public class UserController {
 	@PostMapping(value = "/user")
 	public UserDTO insertUser(@RequestBody UserDTO user) {
 		if (userService.hadUser(user)) {
-			return null;
+			throw new UserExistionException();
 		}
 		
 		return userService.save(user);

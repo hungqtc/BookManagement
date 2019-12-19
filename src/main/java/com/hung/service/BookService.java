@@ -17,6 +17,10 @@ public interface BookService {
 	
 	List<BookDTO> findAllEnable(Pageable pageable);
 	
+	List<BookDTO> findBySearch(String search, Pageable pageable);
+	
+	List<BookDTO> findAllEnableSearch(String search, Pageable pageable);
+	
 	BookDTO findByTitle(String title);
 	
 	BookDTO getById(long id);
@@ -24,11 +28,19 @@ public interface BookService {
 	BookDTO save(BookDTO BookDTO);
 
 	void delete(long[] ids);
+	
+	void delete(long id);
 
 	int totalItem();
 	
 	int totalItemUserCreate(String userName);
 	
 	int totalItemStatus(int status);
+	
+	int totalItem(List<BookDTO> list);
+	
+	boolean hadBook(BookDTO book);
+
+	
 	
 }

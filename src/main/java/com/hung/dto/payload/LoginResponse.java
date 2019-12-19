@@ -1,4 +1,4 @@
-package com.hung.payload;
+package com.hung.dto.payload;
 
 import java.io.Serializable;
 

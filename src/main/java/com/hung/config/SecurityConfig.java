@@ -15,7 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.hung.jwt.JwtAuthenticationFilter;
+import com.hung.config.jwt.JwtAuthenticationFilter;
 import com.hung.service.impls.UserServiceImpl;
 
 @Configuration
@@ -52,9 +52,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 
 		http.csrf().disable();
-		http.authorizeRequests().antMatchers("/login", "/book").permitAll() //
+		http.authorizeRequests()
+		.antMatchers(HttpMethod.GET,"/book").permitAll() 
+		.antMatchers("/login").permitAll()
+		.antMatchers("/user", "/role").hasRole("ADMIN")
+		.anyRequest().authenticated()
 
-				.antMatchers("/role").hasRole("ADMIN").antMatchers("/user").hasRole("USER").anyRequest().authenticated();
+		/*
+		 * .antMatchers("/role").hasRole("ADMIN").antMatchers("/user").hasRole("USER").
+		 * anyRequest().authenticated();
+		 */
 				/* .and().httpBasic() */
 
 		/* .formLogin().defaultSuccessUrl("/book").and().logout() */;

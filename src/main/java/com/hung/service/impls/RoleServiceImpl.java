@@ -33,7 +33,7 @@ public class RoleServiceImpl implements RoleService {
 
 		@Override
 		public RoleDTO getById(Long id) {
-			RoleEntity entity = roleRepository.findOne(id);
+			RoleEntity entity = roleRepository.findById(id).get();
 			return roleConverter.toDTO(entity);
 		}
 
@@ -42,7 +42,7 @@ public class RoleServiceImpl implements RoleService {
 			RoleEntity roleEntity = new RoleEntity();
 			
 			if (roleDTO.getId() != null) {
-				RoleEntity oldRoleEntity = roleRepository.findOne(roleDTO.getId());
+				RoleEntity oldRoleEntity = roleRepository.findById(roleDTO.getId()).get();
 				roleEntity = roleConverter.toEntity(roleDTO, oldRoleEntity);
 			} else {
 				roleEntity = roleConverter.toEntity(roleDTO);
@@ -55,7 +55,6 @@ public class RoleServiceImpl implements RoleService {
 				listUserEntity.add(userEntity);
 			}
 			
-		/* roleEntity.setUsers(listUserEntity); */
 			
 			roleEntity = roleRepository.save(roleEntity);
 			return roleConverter.toDTO(roleEntity);
@@ -63,6 +62,6 @@ public class RoleServiceImpl implements RoleService {
 
 		@Override
 		public void delete(Long RoleId) {
-			roleRepository.delete(RoleId);
+			roleRepository.deleteById(RoleId);
 		}
 }

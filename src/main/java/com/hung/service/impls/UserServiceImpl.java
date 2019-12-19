@@ -2,19 +2,20 @@ package com.hung.service.impls;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.hung.config.security.CustomUserDetails;
 import com.hung.converter.UserConverter;
 import com.hung.dto.UserDTO;
 import com.hung.entity.RoleEntity;
 import com.hung.entity.UserEntity;
 import com.hung.repository.RoleRepository;
 import com.hung.repository.UserRepository;
-import com.hung.security.CustomUserDetails;
 import com.hung.service.UserService;
 
 @Service
@@ -27,16 +28,24 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserConverter userConverter;
-
+	
+	/*
+	 * private Optional<UserEntity> optional;
+	 * 
+	 * public void setOptional(Long id) { optional = userRepository.findById(id); }
+	 */
+	
 	@Override
 	public List<UserDTO> getAll() {
 		List<UserEntity> listEntity = userRepository.findAll();
+		
 		return userConverter.toDTO(listEntity);
 	}
 
 	@Override
 	public UserDTO getById(Long id) {
-		UserEntity entity = userRepository.findOne(id);
+	
+		UserEntity entity = userRepository.findById(id).get();
 		return UserConverter.toDTO(entity);
 	}
 
@@ -45,7 +54,7 @@ public class UserServiceImpl implements UserService {
 		UserEntity userEntity = new UserEntity();
 
 		if (userDTO.getId() != null) {
-			UserEntity oldUserEntity = userRepository.findOne(userDTO.getId());
+			UserEntity oldUserEntity = userRepository.findById(userDTO.getId()).get();
 			userEntity = userConverter.toEntity(userDTO, oldUserEntity);
 		} else {
 			userEntity = userConverter.toEntity(userDTO);
@@ -66,7 +75,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void delete(Long userId) {
-		userRepository.delete(userId);
+		userRepository.deleteById(userId);
 	}
 
 	@Override
@@ -92,8 +101,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserDetails loadUserById(Long id) {
-		UserEntity user = userRepository.findOne(id);
-
+		
+		UserEntity user = userRepository.findById(id).get();
 		return new CustomUserDetails(user);
 	}
 

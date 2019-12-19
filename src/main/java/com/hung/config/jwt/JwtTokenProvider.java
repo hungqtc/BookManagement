@@ -1,11 +1,11 @@
 
-package com.hung.jwt;
+package com.hung.config.jwt;
 
 import java.util.Date;
 
 import org.springframework.stereotype.Component;
 
-import com.hung.security.CustomUserDetails;
+import com.hung.config.security.CustomUserDetails;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
