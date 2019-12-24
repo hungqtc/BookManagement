@@ -53,19 +53,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 		http.csrf().disable();
 		http.authorizeRequests()
-		.antMatchers(HttpMethod.GET,"/book").permitAll() 
-		.antMatchers("/login").permitAll()
-		.antMatchers("/user", "/role").hasRole("ADMIN")
-		.anyRequest().authenticated()
-
-		/*
-		 * .antMatchers("/role").hasRole("ADMIN").antMatchers("/user").hasRole("USER").
-		 * anyRequest().authenticated();
-		 */
-				/* .and().httpBasic() */
-
-		/* .formLogin().defaultSuccessUrl("/book").and().logout() */;
-
+			.antMatchers(HttpMethod.GET,"/book").permitAll() 
+			.antMatchers("/book/{id}").permitAll()
+			.antMatchers("/login").permitAll()
+			.antMatchers("/user", "/role").hasRole("ADMIN")
+			.anyRequest().authenticated();
+		
 		http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
 	}

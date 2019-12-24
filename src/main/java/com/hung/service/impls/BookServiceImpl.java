@@ -1,19 +1,26 @@
 
 package com.hung.service.impls;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.hung.config.security.CustomUserDetails;
 import com.hung.constants.CommonConstant;
 import com.hung.converter.BookConverter;
 import com.hung.dto.BookDTO;
+import com.hung.dto.output.BookOutput;
 import com.hung.entity.BookEntity;
+import com.hung.exceptions.BookExistionException;
+import com.hung.exceptions.UnauthorizedException;
 import com.hung.repository.BookRepository;
 import com.hung.repository.UserRepository;
 import com.hung.service.BookService;
+import com.hung.service.CommentService;
+import com.hung.utils.PageUtil;
 import com.hung.utils.SecurityUtil;
 
 @Service
@@ -25,32 +32,61 @@ public class BookServiceImpl implements BookService {
 	@Autowired
 	private BookConverter bookConverter;
 
+	@Autowired(required = false)
+	CommentService commentService;
+
 	@Autowired
 	private UserRepository userRepository;
 
-	@Override
-	public List<BookDTO> findAll() {
-		List<BookEntity> listEntity = bookRepository.findAll();
-		return bookConverter.toDTO(listEntity);
+	private CustomUserDetails userLogin;
+
+	private String userRoles;
+
+	private BookOutput bookOutput;
+
+	private void checkLogin() {
+		if (SecurityUtil.getPrincipal() != null) {
+			userLogin = SecurityUtil.getPrincipal();
+			userRoles = SecurityUtil.checkRoleUser(userLogin.getAuthorities().toString());
+		}
 	}
 
 	@Override
-	public BookDTO getById(long id) {
+	public BookOutput findAll() {
+		bookOutput = new BookOutput();
+		List<BookEntity> listEntity = bookRepository.findAll();
+
+		bookOutput.setPage(1);
+		bookOutput.setTotalPage(1);
+		bookOutput.setListResult(bookConverter.toDTO(listEntity));
+		return bookOutput;
+	}
+
+	@Override
+	public BookDTO findById(long id) {
 		BookEntity entity = bookRepository.findById(id).get();
 		return bookConverter.toDTO(entity);
 	}
 
 	@Override
-	public BookDTO save(BookDTO BookDTO) {
+	public BookDTO save(BookDTO bookDTO) {
+		if (bookRepository.findByTitle(bookDTO.getTitle()) != null) {
+			throw new BookExistionException();
+		}
+		checkLogin();
 		BookEntity bookEntity = new BookEntity();
 
-		if (BookDTO.getId() != null) {
-			BookEntity oldBookEntity = bookRepository.findById(BookDTO.getId()).get();
-			bookEntity = bookConverter.toEntity(BookDTO, oldBookEntity);
+		if (bookDTO.getId() != null) {
+			BookEntity oldBookEntity = bookRepository.findById(bookDTO.getId()).get();
+			if (("ADMIN").equals(userRoles) || userLogin.getUsername().equals(oldBookEntity.getCreatedBy())) {
+				bookEntity = bookConverter.toEntity(bookDTO, oldBookEntity);
+			} else {
+				throw new UnauthorizedException();
+			}
 		} else {
-			bookEntity = bookConverter.toEntity(BookDTO);
-			String userName = SecurityUtil.getPrincipal().getUsername();
-			bookEntity.setUser(userRepository.findOneByName(userName));
+			bookEntity = bookConverter.toEntity(bookDTO);
+			String email = userLogin.getUsername();
+			bookEntity.setUser(userRepository.findByEmail(email));
 		}
 
 		bookEntity = bookRepository.save(bookEntity);
@@ -59,59 +95,44 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public void delete(long[] ids) {
+		checkLogin();
+		for (Long id : ids) {
+			BookEntity book = bookRepository.findById(id).get();
+			if (!userLogin.getUsername().equals(book.getCreatedBy())) {
+				throw new UnauthorizedException();
+			}
+		}
+		// delete all comment by idBook
+		commentService.deleteByBook(ids);
 		for (long id : ids) {
 			bookRepository.deleteById(id);
 		}
 	}
 
 	@Override
-	public void delete(long id) {
-		bookRepository.deleteById(id);
-	}
+	public BookOutput findAll(Pageable pageable) {
+		checkLogin();
+		List<BookEntity> listBookResult = new ArrayList<>();
+		int totalItem = 0;
+		// check userRole
+		if (("ADMIN").equals(userRoles)) {
+			listBookResult = bookRepository.findAll(pageable).getContent();
+			totalItem = (int) bookRepository.count();
 
-	@Override
-	public List<BookDTO> findAll(Pageable pageable) {
-		List<BookEntity> entities = bookRepository.findAll(pageable).getContent();
-		return bookConverter.toDTO(entities);
-	}
-
-	@Override
-	public int totalItem() {
-		return (int) bookRepository.count();
-	}
-
-	@Override
-	public List<BookDTO> findAllByUserCreated(String userName, Pageable pageable) {
-		List<BookEntity> listEntity = bookRepository.findByCreatedBy(userName, pageable);
-		return bookConverter.toDTO(listEntity);
-	}
-
-	@Override
-	public BookDTO findByTitle(String title) {
-		return bookConverter.toDTO(bookRepository.findByTitle(title));
-	}
-
-	@Override
-	public List<BookDTO> findAllEnable(Pageable pageable) {
-		return bookConverter.toDTO(bookRepository.findByStatus(CommonConstant.ENABLE, pageable));
-	}
-
-	@Override
-	public int totalItemUserCreate(String userName) {
-		return bookRepository.count(userName);
-	}
-
-	@Override
-	public int totalItemStatus(int status) {
-		return bookRepository.count(status);
-	}
-
-	@Override
-	public boolean hadBook(BookDTO book) {
-		if (bookRepository.countByTitle(book.getTitle()) > 0) {
-			return true;
+		} else if (("USER").equals(userRoles)) {
+			String userName = userLogin.getUsername();
+			totalItem = bookRepository.count(userName);
+			listBookResult = bookRepository.findByCreatedBy(userName, pageable);
+		} else {
+			totalItem = bookRepository.count(CommonConstant.STATUS_ENABLE);
+			listBookResult = bookRepository.findByStatus(CommonConstant.STATUS_ENABLE, pageable);
 		}
-		return false;
+
+		bookOutput.setTotalPage(PageUtil.totalPage(totalItem, pageable.getPageSize()));
+		bookOutput.setPage(pageable.getPageNumber() + 1);
+		bookOutput.setListResult(bookConverter.toDTO(listBookResult));
+
+		return bookOutput;
 	}
 
 	@Override
@@ -122,19 +143,17 @@ public class BookServiceImpl implements BookService {
 	}
 
 	@Override
-	public int totalItem(List<BookDTO> list) {
-		return list.size();
-	}
+	public BookOutput findAllEnableSearch(String search, Pageable pageable) {
+		bookOutput = new BookOutput();
+		search = "%" + search + "%";
+		int totalItem = bookRepository.countByTitleOrAuthor(search, search, CommonConstant.STATUS_ENABLE);
 
-	@Override
-	public List<BookDTO> findAllEnableSearch(String search, Pageable pageable) {
-
-		List<BookEntity> listEntity = bookRepository.findByTitleOrAuthor(search, search, CommonConstant.ENABLE,
+		bookOutput.setTotalPage(PageUtil.totalPage(totalItem, pageable.getPageSize()));
+		bookOutput.setPage(pageable.getPageNumber() + 1);
+		List<BookEntity> listEntity = bookRepository.findByTitleOrAuthor(search, search, CommonConstant.STATUS_ENABLE,
 				pageable);
-
-		return bookConverter.toDTO(listEntity);
+		bookOutput.setListResult(bookConverter.toDTO(listEntity));
+		return bookOutput;
 	}
-
-	
 
 }

@@ -1,4 +1,4 @@
-package com.hung.handlers;
+package com.hung.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -6,10 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.hung.handlers.exceptions.BookExistionException;
-import com.hung.handlers.exceptions.UnauthorizedException;
-import com.hung.handlers.exceptions.UserExistionException;
-import com.hung.handlers.exceptions.message.ErrorMessage;
+import com.hung.exceptions.message.ErrorMessage;
 
 @RestControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {

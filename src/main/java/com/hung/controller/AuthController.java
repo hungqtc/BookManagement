@@ -37,7 +37,7 @@ public class AuthController {
 				new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
 		UserDetails userDetails = userService.loadUserByUsername(loginRequest.getEmail());
-		
+
 		final String jwt = tokenProvider.generateToken((CustomUserDetails) userDetails);
 
 		return new LoginResponse(jwt);

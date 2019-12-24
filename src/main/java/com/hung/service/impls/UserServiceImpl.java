@@ -2,7 +2,6 @@ package com.hung.service.impls;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,21 +28,15 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserConverter userConverter;
 	
-	/*
-	 * private Optional<UserEntity> optional;
-	 * 
-	 * public void setOptional(Long id) { optional = userRepository.findById(id); }
-	 */
-	
 	@Override
-	public List<UserDTO> getAll() {
+	public List<UserDTO> findAll() {
 		List<UserEntity> listEntity = userRepository.findAll();
 		
 		return userConverter.toDTO(listEntity);
 	}
 
 	@Override
-	public UserDTO getById(Long id) {
+	public UserDTO findById(Long id) {
 	
 		UserEntity entity = userRepository.findById(id).get();
 		return UserConverter.toDTO(entity);
@@ -81,7 +74,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-		UserEntity user = userRepository.findOneByName(username);
+		UserEntity user = userRepository.findByEmail(username);
 
 		if (user == null) {
 			throw new UsernameNotFoundException(username);
@@ -92,7 +85,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean hadUser(UserDTO userDTO) {
-		if (userRepository.findOneByName(userDTO.getEmail()) != null) {
+		if (userRepository.findByEmail(userDTO.getEmail()) != null) {
 			return true;
 		}
 

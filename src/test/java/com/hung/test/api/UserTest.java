@@ -20,7 +20,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hung.controller.UserController;
 import com.hung.dto.UserDTO;
 import com.hung.service.UserService;
@@ -35,22 +37,88 @@ public class UserTest {
 	UserService userService;
 
 	@Test
-	public void testFindAll() throws Exception {
+	public void getUser() throws Exception {
 		List<String> roles = new ArrayList<>();
 		roles.add("ADMIN");
 
 		UserDTO hung = new UserDTO("hung", null, 1, roles);
-		UserDTO hoa = new UserDTO("hoa", null, 1, roles);
-		// convert Array -> Collection ??? for what
+		UserDTO hoa = new UserDTO("hoa", null, 1, roles); 
 		List<UserDTO> listUser = Arrays.asList(hung, hoa);
-		
-		given(userService.getAll()).willReturn(listUser);
+
+		given(userService.findAll()).willReturn(listUser);
 
 		mvc.perform(get("/user").contentType(MediaType.APPLICATION_JSON))
-				.andDo(print()).andExpect(status().isOk())
+		.andDo(print()).andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(2)))
 				.andExpect(jsonPath("$[0].email", is(listUser.get(0).getEmail())))
 				.andExpect(jsonPath("$[0].roles", is(hung.getRoles())));
+	}
+
+	@Test
+	public void getUserById() throws Exception {
+		List<String> roles = new ArrayList<>();
+		roles.add("ADMIN");
+		long id = 1;
+		UserDTO hung = new UserDTO("hung", null, 1, roles); 
+		given(userService.findById(id)).willReturn(hung);
+
+		mvc.perform(get("/user/{id}", id).contentType(MediaType.APPLICATION_JSON))
+			.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.email", is(hung.getEmail())))
+				.andExpect(jsonPath("$.roles", is(hung.getRoles())));
+	}
+
+	@Test
+	public void insertUser() throws Exception {
+		List<String> roles = new ArrayList<>();
+		roles.add("ADMIN");
+		UserDTO van = new UserDTO("van", "123456", 1, roles);
+		given(userService.save(van)).willReturn(van);
+		
+		mvc.perform(MockMvcRequestBuilders.post("/user")
+				
+			    .content(asJsonString(van)) 
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.email", is(van.getEmail())));
+
+	}
+	
+	@Test
+	public void editUser() throws Exception {
+		List<String> roles = new ArrayList<>();
+		roles.add("ADMIN");
+		UserDTO van = new UserDTO("van", "123456", 1, roles);
+		given(userService.save(van)).willReturn(van);
+		
+		mvc.perform(MockMvcRequestBuilders.put("/user/{id}", 1)
+				
+			    .content(asJsonString(van)) 
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.email", is(van.getEmail())));
+
+	}
+	
+	@Test
+	public void deleteUser() throws Exception 
+	{
+	  mvc.perform( MockMvcRequestBuilders.delete("/user/{id}", 1))
+	        .andExpect(status().isOk());
+	}
+
+
+	public static String asJsonString(final Object obj) {
+	    try {
+	        return new ObjectMapper().writeValueAsString(obj);
+	    } catch (Exception e) {
+	        throw new RuntimeException(e);
+	    }
 	}
 
 }

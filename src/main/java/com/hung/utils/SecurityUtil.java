@@ -7,9 +7,11 @@ import com.hung.config.security.CustomUserDetails;
 
 public class SecurityUtil {
 	public static CustomUserDetails getPrincipal() {
-		String anonymousUser = "anonymousUser";
+		if (SecurityContextHolder.getContext().getAuthentication() == null ) {
+			return null;
+		}
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (authentication.getPrincipal().equals(anonymousUser)) {
+		if ("anonymousUser".equals(authentication.getPrincipal()) || authentication == null || !authentication.isAuthenticated()) {
             return null;
         }
 		
@@ -19,9 +21,9 @@ public class SecurityUtil {
 
 	public static String checkRoleUser(String role) {
 	
-		if (role.contains("[ROLE_ADMIN]") == true) {
+		if (role.contains("[ROLE_ADMIN]")) {
 			return "ADMIN";
-		} else if (role.contains("[ROLE_USER]") == true) {
+		} else if (role.contains("[ROLE_USER]")) {
 			return "USER";
 		}
 		return null;

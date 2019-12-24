@@ -12,7 +12,6 @@ import com.hung.entity.BookEntity;
 
 @Repository
 public interface BookRepository extends JpaRepository<BookEntity, Long> {
-	@Query("select b from BookEntity b where b.createdBy = ?1")
 	List<BookEntity> findByCreatedBy(String name, Pageable pageable);
 
 	@Query("select b from BookEntity b where b.title like ?1 or b.author like ?2")
@@ -23,7 +22,6 @@ public interface BookRepository extends JpaRepository<BookEntity, Long> {
 
 	BookEntity findByTitle(String title);
 
-	@Query("select b from BookEntity b where b.status = ?1")
 	List<BookEntity> findByStatus(int status, Pageable pageable);
 
 	@Query("select count(1) from BookEntity b where b.createdBy = ?1")
@@ -35,9 +33,7 @@ public interface BookRepository extends JpaRepository<BookEntity, Long> {
 	@Query("select count(1) from BookEntity b where b.title = ?1")
 	int countByTitle(String title);
 
-	/*
-	 * @Query("select b from BookEntity b where b.createdBy = ?1 LIMIT ")
-	 * List<BookEntity> findAllBy(String name, int offset, int limit);
-	 */
+	@Query("select count(1) from BookEntity b where b.title like ?1 or b.author like ?2 and b.status = ?3")
+	int countByTitleOrAuthor(String title, String author, int status);
 
 }

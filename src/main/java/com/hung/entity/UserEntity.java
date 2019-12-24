@@ -12,16 +12,10 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
 @Table(name = "users")
 public class UserEntity extends BaseEntity {
 

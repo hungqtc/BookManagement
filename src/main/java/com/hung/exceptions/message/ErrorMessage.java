@@ -1,4 +1,4 @@
-package com.hung.handlers.exceptions.message;
+package com.hung.exceptions.message;
 
 import lombok.Data;
 

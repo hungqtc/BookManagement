@@ -26,13 +26,13 @@ public class RoleServiceImpl implements RoleService {
 	 private RoleConverter roleConverter;
 	 
 	 @Override
-		public List<RoleDTO> getAll() {
+		public List<RoleDTO> findAll() {
 			List<RoleEntity> listEntity = roleRepository.findAll();
 			return roleConverter.toDTO(listEntity);
 		}
 
 		@Override
-		public RoleDTO getById(Long id) {
+		public RoleDTO findById(Long id) {
 			RoleEntity entity = roleRepository.findById(id).get();
 			return roleConverter.toDTO(entity);
 		}
@@ -51,7 +51,7 @@ public class RoleServiceImpl implements RoleService {
 			ArrayList<UserEntity> listUserEntity = new ArrayList<UserEntity>();
 			for (int i = 0; i < listUserDTO.size(); i++) {
 				
-				UserEntity userEntity = userRepository.findOneByName(listUserDTO.get(i));
+				UserEntity userEntity = userRepository.findByEmail(listUserDTO.get(i));
 				listUserEntity.add(userEntity);
 			}
 			

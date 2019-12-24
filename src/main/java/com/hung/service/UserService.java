@@ -8,11 +8,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import com.hung.dto.UserDTO;
 
 public interface UserService  extends UserDetailsService  {
-	List<UserDTO> getAll();
+	List<UserDTO> findAll();
 	
 	boolean hadUser(UserDTO userDTO); 
 
-	UserDTO getById(Long id);
+	UserDTO findById(Long id);
 
 	UserDTO save(UserDTO userDTO);
 	

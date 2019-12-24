@@ -10,16 +10,9 @@ import com.hung.entity.CommentEntity;
 
 @Repository
 public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
-	@Query("select c from CommentEntity c where c.book = ?1")
-	CommentEntity findByBook(int bookId);
 
-	@Query("select c from CommentEntity c where c.createdBy = ?1")
-	CommentEntity findByUser(String name);
+	CommentEntity findByCreatedBy(String name);
 	
-	/*
-	 * @Query(value = "delete from Comment c where c.user_id = ?1", nativeQuery =
-	 * true) void deleteByUserCreated(long id);
-	 */
 	@Transactional
 	@Modifying
 	@Query("delete from CommentEntity c where c.user.id = ?1")
