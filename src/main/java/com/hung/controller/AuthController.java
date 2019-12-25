@@ -21,7 +21,7 @@ import com.hung.service.UserService;
 @RestController
 public class AuthController {
 
-	@Autowired
+	@Autowired(required=false)
 	AuthenticationManager authenticationManager;
 
 	@Autowired
