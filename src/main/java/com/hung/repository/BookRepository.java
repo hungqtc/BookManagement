@@ -35,5 +35,4 @@ public interface BookRepository extends JpaRepository<BookEntity, Long> {
 
 	@Query("select count(1) from BookEntity b where b.title like ?1 or b.author like ?2 and b.status = ?3")
 	int countByTitleOrAuthor(String title, String author, int status);
-
 }

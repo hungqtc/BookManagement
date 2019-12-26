@@ -2,10 +2,7 @@ package com.hung.converter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-
 import org.springframework.stereotype.Component;
-
 import com.hung.dto.RoleDTO;
 import com.hung.entity.RoleEntity;
 import com.hung.entity.UserEntity;
@@ -49,7 +46,5 @@ public class RoleConverter {
 			listDTO.add(toDTO(entity));
 		}
 		return listDTO;
-				
 	}
-
 }

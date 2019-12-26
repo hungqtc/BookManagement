@@ -88,5 +88,4 @@ public class UserServiceImpl implements UserService {
 		UserEntity user = userRepository.findById(id).get();
 		return new CustomUserDetails(user);
 	}
-
 }

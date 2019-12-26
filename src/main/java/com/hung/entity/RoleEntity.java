@@ -1,13 +1,11 @@
 package com.hung.entity;
 
 import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-
 import lombok.Data;
 
 @Data 
@@ -20,5 +18,4 @@ public class RoleEntity extends BaseEntity{
 	
 	@ManyToMany(  fetch = FetchType.EAGER,   mappedBy = "roles" )
 	private List<UserEntity> users ;
-	
 }

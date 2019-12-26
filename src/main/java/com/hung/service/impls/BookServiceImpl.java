@@ -110,7 +110,7 @@ public class BookServiceImpl implements BookService {
 				objSort = new Sort(Direction.DESC, order);
 			}
 			Pageable pageable = PageRequest.of(page - 1, limit, objSort);
-
+			
 			checkLogin();
 			if (search != null) {
 				search = "%" + search + "%";
@@ -141,5 +141,4 @@ public class BookServiceImpl implements BookService {
 		bookOutput.setListResult(bookConverter.toDTO(listBookResult));
 		return bookOutput;
 	}
-
 }

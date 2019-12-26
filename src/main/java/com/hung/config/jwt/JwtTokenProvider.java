@@ -2,11 +2,8 @@
 package com.hung.config.jwt;
 
 import java.util.Date;
-
 import org.springframework.stereotype.Component;
-
 import com.hung.config.security.CustomUserDetails;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -30,7 +27,6 @@ public class JwtTokenProvider {
 
 	public Long getUserIdFromJWT(String token) {
 		Claims claims = Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(token).getBody();
-
 		return Long.parseLong(claims.getSubject());
 	}
 

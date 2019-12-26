@@ -2,9 +2,7 @@ package com.hung.converter;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.stereotype.Component;
-
 import com.hung.dto.BookDTO;
 import com.hung.entity.BookEntity;
 
@@ -12,7 +10,6 @@ import com.hung.entity.BookEntity;
 public class BookConverter {
 	public static BookEntity toEntity(BookDTO dto) {
 		BookEntity entity = new BookEntity();
-	
 		entity.setDescription(dto.getDescription());
 		entity.setAuthor(dto.getAuthor());
 		entity.setTitle(dto.getTitle());
@@ -50,7 +47,5 @@ public class BookConverter {
 			listDTO.add(toDTO(entity));
 		}
 		return listDTO;
-				
 	}
-
 }

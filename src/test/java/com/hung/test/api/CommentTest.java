@@ -46,7 +46,8 @@ public class CommentTest {
 		given(commentService.findAll()).willReturn(listComment);
 
 		mvc.perform(get("/api/comments").contentType(MediaType.APPLICATION_JSON))
-		.andDo(print()).andExpect(status().isOk())
+				.andDo(print())
+				.andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(2)))
 				.andExpect(jsonPath("$[0].message", is(listComment.get(0).getMessage())))
 				.andExpect(jsonPath("$[0].bookTitle", is(listComment.get(0).getBookTitle())));
@@ -59,7 +60,7 @@ public class CommentTest {
 		given(commentService.findById(id)).willReturn(comment);
 
 		mvc.perform(get("/api/comments/{id}", id).contentType(MediaType.APPLICATION_JSON))
-			.andDo(print())
+				.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.message", is(comment.getMessage())))
 				.andExpect(jsonPath("$.bookTitle", is(comment.getBookTitle())));
@@ -87,7 +88,7 @@ public class CommentTest {
 		given(commentService.save(comment)).willReturn(comment);
 		
 		mvc.perform(MockMvcRequestBuilders.put("/api/comments/{id}", id)
-			    .content(asJsonString(new CommentDTO("hay", "Ngồi Khóc Trên Cây"))) 
+				.content(asJsonString(new CommentDTO("hay", "Ngồi Khóc Trên Cây"))) 
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 				.andDo(print())
@@ -102,10 +103,10 @@ public class CommentTest {
 		list.add((long) 1);
 		
 		mvc.perform(MockMvcRequestBuilders.delete("/api/comments") 
-		.content(asJsonString(list))
-		.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
-		.andDo(print())
-		.andExpect(status().isOk());
+			    .content(asJsonString(list))
+				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+				.andDo(print())
+				.andExpect(status().isOk());
 	}
 
 	public static String asJsonString(final Object obj) {
@@ -115,5 +116,4 @@ public class CommentTest {
 	        throw new RuntimeException(e);
 	    }
 	}
-
 }

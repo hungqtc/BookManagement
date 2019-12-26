@@ -2,9 +2,7 @@ package com.hung.converter;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.stereotype.Component;
-
 import com.hung.dto.CommentDTO;
 import com.hung.entity.CommentEntity;
 
@@ -41,7 +39,5 @@ public class CommentConverter {
 			listDTO.add(toDTO(entity));
 		}
 		return listDTO;
-				
 	}
-
 }

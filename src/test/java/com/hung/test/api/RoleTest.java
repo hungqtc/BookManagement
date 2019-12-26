@@ -40,13 +40,11 @@ public class RoleTest {
 	public void getRole() throws Exception {
 		List<String> users = new ArrayList<>();
 		users.add("hung");
-
 		RoleDTO admin = new RoleDTO("admin", users);
 		RoleDTO user = new RoleDTO("user", users); 
 		List<RoleDTO> listRole = Arrays.asList(admin, user);
 
 		given(roleService.findAll()).willReturn(listRole);
-
 		mvc.perform(get("/api/roles").contentType(MediaType.APPLICATION_JSON))
 		.andDo(print()).andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(2)))
@@ -58,11 +56,10 @@ public class RoleTest {
 	public void getRoleById() throws Exception {
 		List<String> users = new ArrayList<>();
 		users.add("hung");
-		
 		RoleDTO admin = new RoleDTO("admin", users);
 		long id = 1;
+		
 		given(roleService.findById(id)).willReturn(admin);
-
 		mvc.perform(get("/api/roles/{id}", id).contentType(MediaType.APPLICATION_JSON))
 			.andDo(print())
 				.andExpect(status().isOk())
@@ -74,11 +71,9 @@ public class RoleTest {
 	public void insertRole() throws Exception {
 		List<String> users = new ArrayList<>();
 		users.add("hung");
-		
 		RoleDTO admin = new RoleDTO("admin", users);
 		
 		given(roleService.save(admin)).willReturn(admin);
-		
 		mvc.perform(MockMvcRequestBuilders.post("/api/roles")
 			    .content(asJsonString(admin)) 
 				.contentType(MediaType.APPLICATION_JSON)
@@ -95,8 +90,8 @@ public class RoleTest {
 		long id = 1;
 		RoleDTO admin = new RoleDTO("admin", users);
 		admin.setId(id);
-		given(roleService.save(admin)).willReturn(admin);
 		
+		given(roleService.save(admin)).willReturn(admin);
 		mvc.perform(MockMvcRequestBuilders.put("/api/roles/{id}", id)
 			    .content(asJsonString(admin)) 
 				.contentType(MediaType.APPLICATION_JSON)
@@ -113,7 +108,6 @@ public class RoleTest {
 	        .andExpect(status().isOk());
 	}
 
-
 	public static String asJsonString(final Object obj) {
 	    try {
 	        return new ObjectMapper().writeValueAsString(obj);
@@ -121,5 +115,4 @@ public class RoleTest {
 	        throw new RuntimeException(e);
 	    }
 	}
-
 }

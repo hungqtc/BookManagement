@@ -151,5 +151,4 @@ public class BookTest {
 			throw new RuntimeException(e);
 		}
 	}
-
 }

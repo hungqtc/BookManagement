@@ -16,52 +16,51 @@ import com.hung.service.RoleService;
 
 @Service
 public class RoleServiceImpl implements RoleService {
-	 @Autowired
-	 private RoleRepository roleRepository;
-	 
-	 @Autowired
-	 private UserRepository userRepository;
-	 
-	 @Autowired
-	 private RoleConverter roleConverter;
-	 
-	 @Override
-		public List<RoleDTO> findAll() {
-			List<RoleEntity> listEntity = roleRepository.findAll();
-			return roleConverter.toDTO(listEntity);
+	@Autowired
+	private RoleRepository roleRepository;
+
+	@Autowired
+	private UserRepository userRepository;
+
+	@Autowired
+	private RoleConverter roleConverter;
+
+	@Override
+	public List<RoleDTO> findAll() {
+		List<RoleEntity> listEntity = roleRepository.findAll();
+		return roleConverter.toDTO(listEntity);
+	}
+
+	@Override
+	public RoleDTO findById(Long id) {
+		RoleEntity entity = roleRepository.findById(id).get();
+		return roleConverter.toDTO(entity);
+	}
+
+	@Override
+	public RoleDTO save(RoleDTO roleDTO) {
+		RoleEntity roleEntity = new RoleEntity();
+
+		if (roleDTO.getId() != null) {
+			RoleEntity oldRoleEntity = roleRepository.findById(roleDTO.getId()).get();
+			roleEntity = roleConverter.toEntity(roleDTO, oldRoleEntity);
+		} else {
+			roleEntity = roleConverter.toEntity(roleDTO);
+		}
+		ArrayList<String> listUserDTO = (ArrayList<String>) roleDTO.getUsers();
+		ArrayList<UserEntity> listUserEntity = new ArrayList<UserEntity>();
+		for (int i = 0; i < listUserDTO.size(); i++) {
+
+			UserEntity userEntity = userRepository.findByEmail(listUserDTO.get(i));
+			listUserEntity.add(userEntity);
 		}
 
-		@Override
-		public RoleDTO findById(Long id) {
-			RoleEntity entity = roleRepository.findById(id).get();
-			return roleConverter.toDTO(entity);
-		}
+		roleEntity = roleRepository.save(roleEntity);
+		return roleConverter.toDTO(roleEntity);
+	}
 
-		@Override
-		public RoleDTO save(RoleDTO roleDTO) {
-			RoleEntity roleEntity = new RoleEntity();
-			
-			if (roleDTO.getId() != null) {
-				RoleEntity oldRoleEntity = roleRepository.findById(roleDTO.getId()).get();
-				roleEntity = roleConverter.toEntity(roleDTO, oldRoleEntity);
-			} else {
-				roleEntity = roleConverter.toEntity(roleDTO);
-			}
-			ArrayList<String> listUserDTO = (ArrayList<String>) roleDTO.getUsers();
-			ArrayList<UserEntity> listUserEntity = new ArrayList<UserEntity>();
-			for (int i = 0; i < listUserDTO.size(); i++) {
-				
-				UserEntity userEntity = userRepository.findByEmail(listUserDTO.get(i));
-				listUserEntity.add(userEntity);
-			}
-			
-			
-			roleEntity = roleRepository.save(roleEntity);
-			return roleConverter.toDTO(roleEntity);
-		}
-
-		@Override
-		public void delete(Long RoleId) {
-			roleRepository.deleteById(RoleId);
-		}
+	@Override
+	public void delete(Long RoleId) {
+		roleRepository.deleteById(RoleId);
+	}
 }

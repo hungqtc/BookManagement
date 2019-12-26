@@ -40,15 +40,14 @@ public class UserTest {
 	public void getUser() throws Exception {
 		List<String> roles = new ArrayList<>();
 		roles.add("ADMIN");
-
 		UserDTO hung = new UserDTO("hung", null, 1, roles);
 		UserDTO hoa = new UserDTO("hoa", null, 1, roles); 
 		List<UserDTO> listUser = Arrays.asList(hung, hoa);
 
 		given(userService.findAll()).willReturn(listUser);
-
 		mvc.perform(get("/api/users").contentType(MediaType.APPLICATION_JSON))
-		.andDo(print()).andExpect(status().isOk())
+				.andDo(print())
+				.andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(2)))
 				.andExpect(jsonPath("$[0].email", is(listUser.get(0).getEmail())))
 				.andExpect(jsonPath("$[0].roles", is(hung.getRoles())));
@@ -63,7 +62,7 @@ public class UserTest {
 		given(userService.findById(id)).willReturn(hung);
 
 		mvc.perform(get("/api/users/{id}", id).contentType(MediaType.APPLICATION_JSON))
-			.andDo(print())
+				.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.email", is(hung.getEmail())))
 				.andExpect(jsonPath("$.roles", is(hung.getRoles())));
@@ -77,14 +76,12 @@ public class UserTest {
 		given(userService.save(van)).willReturn(van);
 		
 		mvc.perform(MockMvcRequestBuilders.post("/api/users")
-				
-			    .content(asJsonString(van)) 
+				.content(asJsonString(van)) 
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 				.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.email", is(van.getEmail())));
-
 	}
 	
 	@Test
@@ -92,17 +89,15 @@ public class UserTest {
 		List<String> roles = new ArrayList<>();
 		roles.add("ADMIN");
 		UserDTO van = new UserDTO("van", "123456", 1, roles);
-		given(userService.save(van)).willReturn(van);
 		
+		given(userService.save(van)).willReturn(van);
 		mvc.perform(MockMvcRequestBuilders.put("/api/users/{id}", 1)
-				
-			    .content(asJsonString(van)) 
+				.content(asJsonString(van)) 
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 				.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.email", is(van.getEmail())));
-
 	}
 	
 	@Test
@@ -112,7 +107,6 @@ public class UserTest {
 	        .andExpect(status().isOk());
 	}
 
-
 	public static String asJsonString(final Object obj) {
 	    try {
 	        return new ObjectMapper().writeValueAsString(obj);
@@ -120,5 +114,4 @@ public class UserTest {
 	        throw new RuntimeException(e);
 	    }
 	}
-
 }

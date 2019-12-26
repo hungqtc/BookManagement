@@ -12,9 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.hung.dto.UserDTO;
-import com.hung.exceptions.UserExistionException;
 import com.hung.service.UserService;
 
 @RestController
@@ -49,5 +47,4 @@ public class UserController {
 		user.setId(id);
 		return userService.save(user);
 	}
-
 }

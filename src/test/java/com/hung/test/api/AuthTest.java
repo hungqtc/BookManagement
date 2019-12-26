@@ -73,5 +73,4 @@ public class AuthTest {
 	        throw new RuntimeException(e);
 	    }
 	}
-
 }

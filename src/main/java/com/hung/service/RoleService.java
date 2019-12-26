@@ -1,7 +1,6 @@
 package com.hung.service;
 
 import java.util.List;
-
 import com.hung.dto.RoleDTO;
 
 public interface RoleService {

@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.hung.config.jwt.JwtTokenProvider;
 import com.hung.config.security.CustomUserDetails;
 import com.hung.dto.payload.LoginRequest;
@@ -34,10 +33,10 @@ public class AuthController {
 	public LoginResponse createAuthenticationToken(@Valid @RequestBody LoginRequest loginRequest) throws Exception {
 
 		Authentication authentication = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+		new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
 		UserDetails userDetails = userService.loadUserByUsername(loginRequest.getEmail());
-
+		
 		final String jwt = tokenProvider.generateToken((CustomUserDetails) userDetails);
 
 		return new LoginResponse(jwt);

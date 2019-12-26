@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.hung.dto.CommentDTO;
 import com.hung.service.CommentService;
 
@@ -48,5 +47,4 @@ public class CommentController {
 		comment.setId(id);
 		return commentService.save(comment);
 	}
-
 }

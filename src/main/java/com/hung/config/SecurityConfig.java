@@ -14,7 +14,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 import com.hung.config.jwt.JwtAuthenticationFilter;
 import com.hung.service.impls.UserServiceImpl;
 
@@ -54,11 +53,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers(HttpMethod.GET,"/api/books").permitAll() 
 			.antMatchers(HttpMethod.GET,"/api/comments").permitAll() 
 			.antMatchers("/api/book/{id}").permitAll()
-		    .antMatchers("/api/login").permitAll()
+			.antMatchers("/api/login").permitAll()
 			.antMatchers("/api/users", "/api/roles").hasRole("ADMIN")
-		    .antMatchers("/api/comments").authenticated();
-		
+			.antMatchers("/api/comments").authenticated();
 		http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
-
 }
