@@ -9,8 +9,6 @@ import com.hung.dto.UserDTO;
 
 public interface UserService  extends UserDetailsService  {
 	List<UserDTO> findAll();
-	
-	boolean hadUser(UserDTO userDTO); 
 
 	UserDTO findById(Long id);
 

@@ -22,6 +22,4 @@ public interface CommentService {
 	void deleteByBook(long[] ids);
 	
 	int totalItem();
-	
-	
 }

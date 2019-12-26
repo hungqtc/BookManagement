@@ -13,6 +13,7 @@ import com.hung.converter.UserConverter;
 import com.hung.dto.UserDTO;
 import com.hung.entity.RoleEntity;
 import com.hung.entity.UserEntity;
+import com.hung.exceptions.UserExistionException;
 import com.hung.repository.RoleRepository;
 import com.hung.repository.UserRepository;
 import com.hung.service.UserService;
@@ -31,21 +32,22 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<UserDTO> findAll() {
 		List<UserEntity> listEntity = userRepository.findAll();
-		
 		return userConverter.toDTO(listEntity);
 	}
 
 	@Override
 	public UserDTO findById(Long id) {
-	
 		UserEntity entity = userRepository.findById(id).get();
 		return UserConverter.toDTO(entity);
 	}
 
 	@Override
 	public UserDTO save(UserDTO userDTO) {
+		if (userRepository.findByEmail(userDTO.getEmail()) != null) {
+			throw new UserExistionException();
+		}
+		
 		UserEntity userEntity = new UserEntity();
-
 		if (userDTO.getId() != null) {
 			UserEntity oldUserEntity = userRepository.findById(userDTO.getId()).get();
 			userEntity = userConverter.toEntity(userDTO, oldUserEntity);
@@ -75,26 +77,14 @@ public class UserServiceImpl implements UserService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
 		UserEntity user = userRepository.findByEmail(username);
-
 		if (user == null) {
 			throw new UsernameNotFoundException(username);
 		}
-
 		return new CustomUserDetails(user);
 	}
 
 	@Override
-	public boolean hadUser(UserDTO userDTO) {
-		if (userRepository.findByEmail(userDTO.getEmail()) != null) {
-			return true;
-		}
-
-		return false;
-	}
-
-	@Override
 	public UserDetails loadUserById(Long id) {
-		
 		UserEntity user = userRepository.findById(id).get();
 		return new CustomUserDetails(user);
 	}

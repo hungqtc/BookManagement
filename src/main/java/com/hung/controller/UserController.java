@@ -41,9 +41,6 @@ public class UserController {
 
 	@PostMapping()
 	public UserDTO insertUser(@RequestBody UserDTO user) {
-		if (userService.hadUser(user)) {
-			throw new UserExistionException();
-		}
 		return userService.save(user);
 	}
 

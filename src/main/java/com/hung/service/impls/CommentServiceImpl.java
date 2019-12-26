@@ -86,7 +86,6 @@ public class CommentServiceImpl implements CommentService {
 		for (long id : ids) {
 			commentRepository.deleteByBook(id);
 		}
-
 	}
 
 	@Override

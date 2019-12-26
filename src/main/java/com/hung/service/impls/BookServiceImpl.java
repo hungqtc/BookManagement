@@ -45,8 +45,6 @@ public class BookServiceImpl implements BookService {
 
 	private String userRoles;
 
-	private BookOutput bookOutput;
-
 	private void checkLogin() {
 		if (SecurityUtil.getPrincipal() != null) {
 			userLogin = SecurityUtil.getPrincipal();
@@ -80,7 +78,6 @@ public class BookServiceImpl implements BookService {
 			String email = userLogin.getUsername();
 			bookEntity.setUser(userRepository.findByEmail(email));
 		}
-
 		bookEntity = bookRepository.save(bookEntity);
 		return bookConverter.toDTO(bookEntity);
 	}
@@ -105,6 +102,7 @@ public class BookServiceImpl implements BookService {
 	public BookOutput findAll(Integer page, Integer limit, String sort, String order, String search) {
 		List<BookEntity> listBookResult = new ArrayList<>();
 		int totalItem = 0;
+		BookOutput bookOutput = new BookOutput();
 
 		if (page != null && limit != null) {
 			Sort objSort = new Sort(Sort.Direction.ASC, order);
@@ -132,14 +130,14 @@ public class BookServiceImpl implements BookService {
 				totalItem = bookRepository.count(CommonConstant.STATUS_ENABLE);
 				listBookResult = bookRepository.findByStatus(CommonConstant.STATUS_ENABLE, pageable);
 			}
-
 			bookOutput.setPage(page);
+			bookOutput.setTotalPage(PageUtil.totalPage(totalItem, limit));
 
 		} else {
 			listBookResult = bookRepository.findAll();
-			bookOutput.setPage(0);
+			bookOutput.setPage(1);
+			bookOutput.setTotalPage(1);
 		}
-		bookOutput.setTotalPage(PageUtil.totalPage(totalItem, limit));
 		bookOutput.setListResult(bookConverter.toDTO(listBookResult));
 		return bookOutput;
 	}
