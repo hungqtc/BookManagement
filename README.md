@@ -8,7 +8,7 @@ Build Status [![Build Status](https://travis-ci.org/hungqtc/BookManagement.svg?b
 
 1. Use Postman to call API
 
-Ex: https://localhost:8080/books
+Ex: https://localhost:8082/api/books
 
 Info User Login: (user/password/role)
 

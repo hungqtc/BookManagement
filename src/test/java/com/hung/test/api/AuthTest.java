@@ -40,11 +40,10 @@ public class AuthTest {
 	UserService userService;
 	
 	@MockBean
-	AuthenticationManager authenticationManager;;
+	AuthenticationManager authenticationManager;
 
 	@Test
 	public void login() throws Exception {
-		
 		String token = "token";
 		String name = "hung";
 		String password = "123456";

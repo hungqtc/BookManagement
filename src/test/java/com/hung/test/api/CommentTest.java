@@ -56,7 +56,6 @@ public class CommentTest {
 
 	@Test
 	public void getCommentById() throws Exception {
-		
 		long id = 1;
 		CommentDTO comment = new CommentDTO("hay", "Ngồi Khóc Trên Cây");
 		given(commentService.findById(id)).willReturn(comment);
@@ -70,7 +69,6 @@ public class CommentTest {
 
 	@Test
 	public void insertComment() throws Exception {
-		
 		CommentDTO comment = new CommentDTO("hay", "Ngồi Khóc Trên Cây");
 		given(commentService.save(comment)).willReturn(comment);
 		

@@ -39,7 +39,6 @@ public class BookTest {
 
 	@Test
 	public void getBook() throws Exception {
-		
 		BookOutput bookOutput = new BookOutput();
 		BookDTO book = new BookDTO("Ngồi Khóc Trên Cây", null, "Nguyễn Nhật Ánh", null, 1);
 		book.setId((long) 1);
@@ -67,7 +66,6 @@ public class BookTest {
 	
 	@Test
 	public void getBookSearch() throws Exception {
-		
 		BookOutput bookOutput = new BookOutput();
 		BookDTO book = new BookDTO("Ngồi Khóc Trên Cây", null, "Nguyễn Nhật Ánh", null, 1);
 		book.setId((long) 1);
@@ -92,7 +90,6 @@ public class BookTest {
 
 	@Test
 	public void getBookById() throws Exception {
-
 		long id = 1;
 		BookDTO book = new BookDTO("Ngồi Khóc Trên Cây", null, "Nguyễn Nhật Ánh", null, 1);
 		book.setId(id);
