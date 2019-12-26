@@ -11,6 +11,6 @@ Build Status [![Build Status](https://travis-ci.org/hungqtc/BookManagement.svg?b
 -Ex: https://http://localhost:8080//books
 
 -Info User Login: user/password/role
-hung/123456/ADMIN
-hoa/123456/USER
+  -hung/123456/ADMIN
+  -hoa/123456/USER
 
