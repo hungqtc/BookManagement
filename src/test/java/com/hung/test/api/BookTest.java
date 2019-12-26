@@ -53,7 +53,7 @@ public class BookTest {
 		bookOutput.setListResult(listBook);
 		given(bookService.findAll(1, 2, "ASC", "title", null)).willReturn(bookOutput);
 
-		mvc.perform(get("/book")
+		mvc.perform(get("/api/books")
 				.param("page", "1")
 				.param("limit", "2")
 				.param("sort", "ASC")
@@ -77,7 +77,7 @@ public class BookTest {
 		bookOutput.setListResult(listBook);
 		given(bookService.findAll(1, 2, "ASC", "title", "ngoi")).willReturn(bookOutput);
 
-		mvc.perform(get("/book")
+		mvc.perform(get("/api/books")
 			.param("page", "1")
 			.param("limit", "2")
 			.param("sort", "ASC")
@@ -111,7 +111,7 @@ public class BookTest {
 		BookDTO book = new BookDTO("Ngồi Khóc Trên Cây", null, "Nguyễn Nhật Ánh", null, 1);
 		given(bookService.save(book)).willReturn(book);
 
-		mvc.perform(MockMvcRequestBuilders.post("/book")
+		mvc.perform(MockMvcRequestBuilders.post("/api/books")
 		    .content(asJsonString(book))
 			.contentType(MediaType.APPLICATION_JSON)
 			.accept(MediaType.APPLICATION_JSON))
@@ -127,7 +127,7 @@ public class BookTest {
 		book.setId(id);
 		given(bookService.save(book)).willReturn(book);
 
-		mvc.perform(MockMvcRequestBuilders.put("/book/{id}", id)
+		mvc.perform(MockMvcRequestBuilders.put("/api/books/{id}", id)
 		   .content(asJsonString(book))
 		   .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 		   .andDo(print())
@@ -140,7 +140,7 @@ public class BookTest {
 		list.add((long) 5);
 		list.add((long) 1);
 		
-		mvc.perform(MockMvcRequestBuilders.delete("/book") 
+		mvc.perform(MockMvcRequestBuilders.delete("/api/books") 
 		    .content(asJsonString(list))
 			.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 			.andDo(print())
