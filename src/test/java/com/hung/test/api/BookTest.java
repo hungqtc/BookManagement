@@ -49,8 +49,7 @@ public class BookTest {
 
 	@Test
 	public void getBook() throws Exception {
-		Sort objSort = new Sort(Sort.Direction.ASC, "title");
-		Pageable pageable = PageRequest.of(0, 2, objSort);
+		
 		BookOutput bookOutput = new BookOutput();
 		BookDTO book = new BookDTO("Ngồi Khóc Trên Cây", null, "Nguyễn Nhật Ánh", null, 1);
 		book.setId((long) 1);
@@ -62,7 +61,7 @@ public class BookTest {
 		bookOutput.setPage(1);
 		bookOutput.setTotalPage(3);
 		bookOutput.setListResult(listBook);
-		given(bookService.findAll(pageable)).willReturn(bookOutput);
+		given(bookService.findAll(1, 2, "ASC", "title", null)).willReturn(bookOutput);
 
 		mvc.perform(get("/book")
 
@@ -73,14 +72,13 @@ public class BookTest {
 				.contentType(MediaType.APPLICATION_JSON))
 				.andDo(print()).andExpect(status().isOk())
 				.andExpect(jsonPath("$.listResult", hasSize(3)))
-				.andExpect(jsonPath("$.page", is(pageable.getPageNumber()+1)))
+				.andExpect(jsonPath("$.page", is(1)))
 				.andExpect(jsonPath("$.listResult[0].id", is(2)));
 	}
 	
 	@Test
 	public void getBookSearch() throws Exception {
-		Sort objSort = new Sort(Sort.Direction.ASC, "title");
-		Pageable pageable = PageRequest.of(0, 2, objSort);
+		
 		BookOutput bookOutput = new BookOutput();
 		BookDTO book = new BookDTO("Ngồi Khóc Trên Cây", null, "Nguyễn Nhật Ánh", null, 1);
 		book.setId((long) 1);
@@ -88,11 +86,12 @@ public class BookTest {
 		bookOutput.setPage(1);
 		bookOutput.setTotalPage(1);
 		bookOutput.setListResult(listBook);
-		given(bookService.findAllEnableSearch("ngoi", pageable)).willReturn(bookOutput);
+		given(bookService.findAll(1, 2, "ASC", "title", "ngoi")).willReturn(bookOutput);
 
 		mvc.perform(get("/book")
 			.param("page", "1")
 			.param("limit", "2")
+			.param("sort", "ASC")
 			.param("order", "title")
 			.param("search", "ngoi")
 			.contentType(MediaType.APPLICATION_JSON)).andDo(print())

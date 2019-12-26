@@ -6,8 +6,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.Collection;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -50,27 +47,25 @@ public class AuthTest {
 		
 		String token = "token";
 		String name = "hung";
-		
+		String password = "123456";
 		Authentication authentication = null;
-		LoginRequest loginRequest = new LoginRequest(name, "123456");
+		LoginRequest loginRequest = new LoginRequest(name, password);
 		UserDetails userDetails = null;
-		given(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())))
-		.willReturn(authentication);
+		UsernamePasswordAuthenticationToken user = new UsernamePasswordAuthenticationToken(name, password);
 		
+		given(authenticationManager.authenticate(user)).willReturn(authentication);
 		given(userService.loadUserByUsername(name)).willReturn(userDetails);
-	    userDetails = userService.loadUserByUsername(name); 
-	    
+		userDetails = userService.loadUserByUsername(name); 
 		given(tokenPrivider.generateToken((CustomUserDetails)userDetails)).willReturn(token);
 		
 		mvc.perform(MockMvcRequestBuilders.post("/login")
-				
-			    .content(asJsonString( loginRequest)) 
+				.content(asJsonString( loginRequest)) 
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 				.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.accessToken", is(token)));
-	}
+	}	
 	
 	public static String asJsonString(final Object obj) {
 	    try {

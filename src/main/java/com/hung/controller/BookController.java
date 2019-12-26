@@ -2,10 +2,6 @@
 package com.hung.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,20 +30,7 @@ public class BookController {
 			@RequestParam(value = "order", required = false, defaultValue = "id") String order,
 			@RequestParam(value = "search", required = false) String search) {
 
-		if (page != null && limit != null) {
-			Sort objSort = new Sort(Sort.Direction.ASC, order);
-			if ("DESC".equalsIgnoreCase(sort)) {
-				objSort = new Sort(Direction.DESC, order);
-			}
-			Pageable pageable = PageRequest.of(page - 1, limit, objSort);
-			if (search != null) {
-				return bookService.findAllEnableSearch(search, pageable);
-			}
-			return bookService.findAll(pageable);
-
-		} else {
-			return bookService.findAll();
-		}
+		return bookService.findAll(page, limit, sort, order, search);
 
 	}
 
