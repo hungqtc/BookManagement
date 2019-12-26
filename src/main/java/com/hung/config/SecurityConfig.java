@@ -32,7 +32,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
-
 		return new BCryptPasswordEncoder();
 	}
 
@@ -50,7 +49,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-
 		http.csrf().disable();
 		http.authorizeRequests()
 			.antMatchers(HttpMethod.GET,"/api/books").permitAll() 
@@ -58,11 +56,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/api/book/{id}").permitAll()
 		    .antMatchers("/api/login").permitAll()
 			.antMatchers("/api/users", "/api/roles").hasRole("ADMIN")
-			.antMatchers("/api/comments").authenticated() 
-			;
+		    .antMatchers("/api/comments").authenticated();
 		
 		http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-
 	}
 
 }

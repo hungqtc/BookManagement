@@ -24,7 +24,7 @@ public class RoleController {
 	@Autowired
 	RoleService roleService;
 
-	@GetMapping()
+	@GetMapping
 	public List<RoleDTO> getAll() {
 		return roleService.findAll();
 	}
@@ -39,7 +39,7 @@ public class RoleController {
 		roleService.delete(id);
 	}
 
-	@PostMapping()
+	@PostMapping
 	public RoleDTO insertRole(@RequestBody RoleDTO role) {
 		return roleService.save(role);
 	}

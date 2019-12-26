@@ -40,11 +40,9 @@ public class CommentTest {
 	public void getComment() throws Exception {
 		List<String> roles = new ArrayList<>();
 		roles.add("ADMIN");
-
 		CommentDTO comment = new CommentDTO("hay", "Ngồi Khóc Trên Cây");
 		CommentDTO comment2 = new CommentDTO("hay qua", "Ngồi Khóc Trên Cây");
 		List<CommentDTO> listComment = Arrays.asList(comment, comment2);
-
 		given(commentService.findAll()).willReturn(listComment);
 
 		mvc.perform(get("/api/comments").contentType(MediaType.APPLICATION_JSON))
@@ -73,7 +71,6 @@ public class CommentTest {
 		given(commentService.save(comment)).willReturn(comment);
 		
 		mvc.perform(MockMvcRequestBuilders.post("/api/comments")
-				
 			    .content(asJsonString( new CommentDTO("hay", "Ngồi Khóc Trên Cây"))) 
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
@@ -90,7 +87,6 @@ public class CommentTest {
 		given(commentService.save(comment)).willReturn(comment);
 		
 		mvc.perform(MockMvcRequestBuilders.put("/api/comments/{id}", id)
-				
 			    .content(asJsonString(new CommentDTO("hay", "Ngồi Khóc Trên Cây"))) 
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))

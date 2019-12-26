@@ -24,7 +24,7 @@ public class UserController {
 	@Autowired
 	UserService userService;
 
-	@GetMapping()
+	@GetMapping
 	public List<UserDTO> getAll() {
 		return userService.findAll();
 	}
@@ -39,7 +39,7 @@ public class UserController {
 		userService.delete(id);
 	}
 
-	@PostMapping()
+	@PostMapping
 	public UserDTO insertUser(@RequestBody UserDTO user) {
 		return userService.save(user);
 	}

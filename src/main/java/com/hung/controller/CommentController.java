@@ -23,7 +23,7 @@ public class CommentController {
 	@Autowired
 	CommentService commentService;
 
-	@GetMapping()
+	@GetMapping
 	public List<CommentDTO> getAll() {
 		return commentService.findAll();
 	}
@@ -33,12 +33,12 @@ public class CommentController {
 		return commentService.findById(id);
 	}
 
-	@DeleteMapping()
+	@DeleteMapping
 	public void deleteComment(@RequestBody long[] ids) {
 		commentService.delete(ids);
 	}
 
-	@PostMapping()
+	@PostMapping
 	public CommentDTO insertComment(@RequestBody CommentDTO comment) {
 		return commentService.save(comment);
 	}
