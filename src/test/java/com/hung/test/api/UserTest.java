@@ -47,7 +47,7 @@ public class UserTest {
 
 		given(userService.findAll()).willReturn(listUser);
 
-		mvc.perform(get("/user").contentType(MediaType.APPLICATION_JSON))
+		mvc.perform(get("/api/users").contentType(MediaType.APPLICATION_JSON))
 		.andDo(print()).andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(2)))
 				.andExpect(jsonPath("$[0].email", is(listUser.get(0).getEmail())))
@@ -62,7 +62,7 @@ public class UserTest {
 		UserDTO hung = new UserDTO("hung", null, 1, roles); 
 		given(userService.findById(id)).willReturn(hung);
 
-		mvc.perform(get("/user/{id}", id).contentType(MediaType.APPLICATION_JSON))
+		mvc.perform(get("/api/users/{id}", id).contentType(MediaType.APPLICATION_JSON))
 			.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.email", is(hung.getEmail())))
@@ -76,7 +76,7 @@ public class UserTest {
 		UserDTO van = new UserDTO("van", "123456", 1, roles);
 		given(userService.save(van)).willReturn(van);
 		
-		mvc.perform(MockMvcRequestBuilders.post("/user")
+		mvc.perform(MockMvcRequestBuilders.post("/api/users")
 				
 			    .content(asJsonString(van)) 
 				.contentType(MediaType.APPLICATION_JSON)
@@ -94,7 +94,7 @@ public class UserTest {
 		UserDTO van = new UserDTO("van", "123456", 1, roles);
 		given(userService.save(van)).willReturn(van);
 		
-		mvc.perform(MockMvcRequestBuilders.put("/user/{id}", 1)
+		mvc.perform(MockMvcRequestBuilders.put("/api/users/{id}", 1)
 				
 			    .content(asJsonString(van)) 
 				.contentType(MediaType.APPLICATION_JSON)
@@ -108,7 +108,7 @@ public class UserTest {
 	@Test
 	public void deleteUser() throws Exception 
 	{
-	  mvc.perform( MockMvcRequestBuilders.delete("/user/{id}", 1))
+	  mvc.perform( MockMvcRequestBuilders.delete("/api/users/{id}", 1))
 	        .andExpect(status().isOk());
 	}
 

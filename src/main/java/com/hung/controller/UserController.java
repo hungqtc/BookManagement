@@ -18,7 +18,7 @@ import com.hung.exceptions.UserExistionException;
 import com.hung.service.UserService;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/users")
 public class UserController {
 
 	@Autowired

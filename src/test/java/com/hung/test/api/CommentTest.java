@@ -47,7 +47,7 @@ public class CommentTest {
 
 		given(commentService.findAll()).willReturn(listComment);
 
-		mvc.perform(get("/comment").contentType(MediaType.APPLICATION_JSON))
+		mvc.perform(get("/api/comments").contentType(MediaType.APPLICATION_JSON))
 		.andDo(print()).andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(2)))
 				.andExpect(jsonPath("$[0].message", is(listComment.get(0).getMessage())))
@@ -61,7 +61,7 @@ public class CommentTest {
 		CommentDTO comment = new CommentDTO("hay", "Ngồi Khóc Trên Cây");
 		given(commentService.findById(id)).willReturn(comment);
 
-		mvc.perform(get("/comment/{id}", id).contentType(MediaType.APPLICATION_JSON))
+		mvc.perform(get("/api/comments/{id}", id).contentType(MediaType.APPLICATION_JSON))
 			.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.message", is(comment.getMessage())))
@@ -74,7 +74,7 @@ public class CommentTest {
 		CommentDTO comment = new CommentDTO("hay", "Ngồi Khóc Trên Cây");
 		given(commentService.save(comment)).willReturn(comment);
 		
-		mvc.perform(MockMvcRequestBuilders.post("/comment")
+		mvc.perform(MockMvcRequestBuilders.post("/api/comments")
 				
 			    .content(asJsonString( new CommentDTO("hay", "Ngồi Khóc Trên Cây"))) 
 				.contentType(MediaType.APPLICATION_JSON)
@@ -82,7 +82,6 @@ public class CommentTest {
 				.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.message", is(comment.getMessage())));
-
 	}
 	
 	@Test
@@ -92,7 +91,7 @@ public class CommentTest {
 		comment.setId(id);
 		given(commentService.save(comment)).willReturn(comment);
 		
-		mvc.perform(MockMvcRequestBuilders.put("/comment/{id}", id)
+		mvc.perform(MockMvcRequestBuilders.put("/api/comments/{id}", id)
 				
 			    .content(asJsonString(new CommentDTO("hay", "Ngồi Khóc Trên Cây"))) 
 				.contentType(MediaType.APPLICATION_JSON)
@@ -100,7 +99,6 @@ public class CommentTest {
 				.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.message", is(comment.getMessage())));
-
 	}
 	
 	@Test
@@ -109,12 +107,11 @@ public class CommentTest {
 		list.add((long) 5);
 		list.add((long) 1);
 		
-		mvc.perform(MockMvcRequestBuilders.delete("/comment") 
+		mvc.perform(MockMvcRequestBuilders.delete("/api/comments") 
 		.content(asJsonString(list))
 		.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 		.andDo(print())
 		.andExpect(status().isOk());
-		
 	}
 
 	public static String asJsonString(final Object obj) {

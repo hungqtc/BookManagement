@@ -17,7 +17,7 @@ import com.hung.dto.CommentDTO;
 import com.hung.service.CommentService;
 
 @RestController
-@RequestMapping("/comment")
+@RequestMapping("/api/comments")
 public class CommentController {
 
 	@Autowired
@@ -25,13 +25,11 @@ public class CommentController {
 
 	@GetMapping()
 	public List<CommentDTO> getAll() {
-		
 		return commentService.findAll();
 	}
 
 	@GetMapping(value = "/{id}")
 	public CommentDTO getOneById(@PathVariable long id) {
-		
 		return commentService.findById(id);
 	}
 

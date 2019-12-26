@@ -17,7 +17,7 @@ import com.hung.dto.output.BookOutput;
 import com.hung.service.BookService;
 
 @RestController
-@RequestMapping("/book")
+@RequestMapping("/api/books")
 public class BookController {
 
 	@Autowired
@@ -31,7 +31,6 @@ public class BookController {
 			@RequestParam(value = "search", required = false) String search) {
 
 		return bookService.findAll(page, limit, sort, order, search);
-
 	}
 
 	@GetMapping(value = "/{id}")
@@ -47,13 +46,11 @@ public class BookController {
 
 	@PostMapping()
 	public BookDTO insertBook(@RequestBody BookDTO book) {
-
 		return bookService.save(book);
 	}
 
 	@PutMapping(value = "/{id}")
 	public BookDTO editBook(@RequestBody BookDTO book, @PathVariable long id) {
-
 		book.setId(id);
 		return bookService.save(book);
 

@@ -30,7 +30,7 @@ public class AuthController {
 	@Autowired
 	private UserService userService;
 
-	@PostMapping("/login")
+	@PostMapping("/api/login")
 	public LoginResponse createAuthenticationToken(@Valid @RequestBody LoginRequest loginRequest) throws Exception {
 
 		Authentication authentication = authenticationManager.authenticate(

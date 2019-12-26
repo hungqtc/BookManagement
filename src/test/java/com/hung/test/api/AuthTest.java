@@ -58,7 +58,7 @@ public class AuthTest {
 		userDetails = userService.loadUserByUsername(name); 
 		given(tokenPrivider.generateToken((CustomUserDetails)userDetails)).willReturn(token);
 		
-		mvc.perform(MockMvcRequestBuilders.post("/login")
+		mvc.perform(MockMvcRequestBuilders.post("/api/login")
 				.content(asJsonString( loginRequest)) 
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))

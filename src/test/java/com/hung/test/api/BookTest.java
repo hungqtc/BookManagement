@@ -4,7 +4,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -13,30 +12,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.assertj.core.api.LongArrayAssert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.test.web.servlet.RequestBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hung.controller.BookController;
-import com.hung.controller.UserController;
 import com.hung.dto.BookDTO;
-import com.hung.dto.UserDTO;
 import com.hung.dto.output.BookOutput;
 import com.hung.service.BookService;
-import com.hung.service.UserService;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = BookController.class, secure = false)
@@ -64,7 +54,6 @@ public class BookTest {
 		given(bookService.findAll(1, 2, "ASC", "title", null)).willReturn(bookOutput);
 
 		mvc.perform(get("/book")
-
 				.param("page", "1")
 				.param("limit", "2")
 				.param("sort", "ASC")
@@ -107,10 +96,9 @@ public class BookTest {
 		long id = 1;
 		BookDTO book = new BookDTO("Ngồi Khóc Trên Cây", null, "Nguyễn Nhật Ánh", null, 1);
 		book.setId(id);
-
 		given(bookService.findById(id)).willReturn(book);
 
-		mvc.perform(get("/book/{id}", id).contentType(MediaType.APPLICATION_JSON))
+		mvc.perform(get("/api/books/{id}", id).contentType(MediaType.APPLICATION_JSON))
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.title", is(book.getTitle())))
@@ -124,14 +112,12 @@ public class BookTest {
 		given(bookService.save(book)).willReturn(book);
 
 		mvc.perform(MockMvcRequestBuilders.post("/book")
-
 		    .content(asJsonString(book))
 			.contentType(MediaType.APPLICATION_JSON)
 			.accept(MediaType.APPLICATION_JSON))
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.title", is(book.getTitle())));
-
 	}
 
 	@Test
@@ -142,12 +128,10 @@ public class BookTest {
 		given(bookService.save(book)).willReturn(book);
 
 		mvc.perform(MockMvcRequestBuilders.put("/book/{id}", id)
-
 		   .content(asJsonString(book))
 		   .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 		   .andDo(print())
 		   .andExpect(status().isOk()).andExpect(jsonPath("$.title", is(book.getTitle())));
-			
 	}
 
 	@Test

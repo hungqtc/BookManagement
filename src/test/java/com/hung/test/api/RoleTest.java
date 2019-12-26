@@ -47,7 +47,7 @@ public class RoleTest {
 
 		given(roleService.findAll()).willReturn(listRole);
 
-		mvc.perform(get("/role").contentType(MediaType.APPLICATION_JSON))
+		mvc.perform(get("/api/roles").contentType(MediaType.APPLICATION_JSON))
 		.andDo(print()).andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(2)))
 				.andExpect(jsonPath("$[0].name", is(listRole.get(0).getName())))
@@ -63,7 +63,7 @@ public class RoleTest {
 		long id = 1;
 		given(roleService.findById(id)).willReturn(admin);
 
-		mvc.perform(get("/role/{id}", id).contentType(MediaType.APPLICATION_JSON))
+		mvc.perform(get("/api/roles/{id}", id).contentType(MediaType.APPLICATION_JSON))
 			.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.name", is(admin.getName())))
@@ -79,15 +79,13 @@ public class RoleTest {
 		
 		given(roleService.save(admin)).willReturn(admin);
 		
-		mvc.perform(MockMvcRequestBuilders.post("/role")
-				
+		mvc.perform(MockMvcRequestBuilders.post("/api/roles")
 			    .content(asJsonString(admin)) 
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 				.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.name", is(admin.getName())));
-
 	}
 	
 	@Test
@@ -99,21 +97,19 @@ public class RoleTest {
 		admin.setId(id);
 		given(roleService.save(admin)).willReturn(admin);
 		
-		mvc.perform(MockMvcRequestBuilders.put("/role/{id}", id)
-				
+		mvc.perform(MockMvcRequestBuilders.put("/api/roles/{id}", id)
 			    .content(asJsonString(admin)) 
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 				.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.name", is(admin.getName())));
-
 	}
 	
 	@Test
 	public void deleteRole() throws Exception 
 	{
-	  mvc.perform( MockMvcRequestBuilders.delete("/role/{id}", 1))
+	  mvc.perform( MockMvcRequestBuilders.delete("/api/roles/{id}", 1))
 	        .andExpect(status().isOk());
 	}
 

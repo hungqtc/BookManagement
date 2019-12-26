@@ -18,7 +18,7 @@ import com.hung.dto.RoleDTO;
 import com.hung.service.RoleService;
 
 @RestController
-@RequestMapping("/role")
+@RequestMapping("/api/roles")
 public class RoleController {
 
 	@Autowired
@@ -26,9 +26,7 @@ public class RoleController {
 
 	@GetMapping()
 	public List<RoleDTO> getAll() {
-		
 		return roleService.findAll();
-		
 	}
 	
 	@GetMapping(value = "/{id}")
