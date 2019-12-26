@@ -4,7 +4,7 @@ Build Status [![Build Status](https://travis-ci.org/hungqtc/BookManagement.svg?b
 
 1. Access Travis: [Travis](https://travis-ci.org/hungqtc/BookManagement/builds/629269677)
 
-1. Read API's description: [Swagger](https://hung-java-spring.herokuapp.com/swagger-ui.html)
+1. Read API's description: [Swagger](https://localhost:8082/swagger-ui.html)
 
 1. Use Postman to call API
 
