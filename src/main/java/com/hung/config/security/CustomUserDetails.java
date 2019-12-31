@@ -1,8 +1,7 @@
 
-package com.hung.security;
+package com.hung.config.security;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;

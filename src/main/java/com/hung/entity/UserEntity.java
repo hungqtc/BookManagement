@@ -2,7 +2,6 @@ package com.hung.entity;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,17 +10,10 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import lombok.Data;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@Getter
-@Setter
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
 @Table(name = "users")
 public class UserEntity extends BaseEntity {
 
@@ -46,5 +38,4 @@ public class UserEntity extends BaseEntity {
 
 	@OneToMany(mappedBy = "user")
 	private List<BookEntity> books = new ArrayList<>();
-
 }

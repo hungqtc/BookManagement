@@ -8,13 +8,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.hung.config.security.CustomUserDetails;
 import com.hung.converter.UserConverter;
 import com.hung.dto.UserDTO;
 import com.hung.entity.RoleEntity;
 import com.hung.entity.UserEntity;
+import com.hung.exceptions.UserExistionException;
 import com.hung.repository.RoleRepository;
 import com.hung.repository.UserRepository;
-import com.hung.security.CustomUserDetails;
 import com.hung.service.UserService;
 
 @Service
@@ -27,25 +28,28 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserConverter userConverter;
-
+	
 	@Override
-	public List<UserDTO> getAll() {
+	public List<UserDTO> findAll() {
 		List<UserEntity> listEntity = userRepository.findAll();
 		return userConverter.toDTO(listEntity);
 	}
 
 	@Override
-	public UserDTO getById(Long id) {
-		UserEntity entity = userRepository.findOne(id);
+	public UserDTO findById(Long id) {
+		UserEntity entity = userRepository.findById(id).get();
 		return UserConverter.toDTO(entity);
 	}
 
 	@Override
 	public UserDTO save(UserDTO userDTO) {
+		if (userRepository.findByEmail(userDTO.getEmail()) != null) {
+			throw new UserExistionException();
+		}
+		
 		UserEntity userEntity = new UserEntity();
-
 		if (userDTO.getId() != null) {
-			UserEntity oldUserEntity = userRepository.findOne(userDTO.getId());
+			UserEntity oldUserEntity = userRepository.findById(userDTO.getId()).get();
 			userEntity = userConverter.toEntity(userDTO, oldUserEntity);
 		} else {
 			userEntity = userConverter.toEntity(userDTO);
@@ -66,35 +70,22 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void delete(Long userId) {
-		userRepository.delete(userId);
+		userRepository.deleteById(userId);
 	}
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-		UserEntity user = userRepository.findOneByName(username);
-
+		UserEntity user = userRepository.findByEmail(username);
 		if (user == null) {
 			throw new UsernameNotFoundException(username);
 		}
-
 		return new CustomUserDetails(user);
-	}
-
-	@Override
-	public boolean hadUser(UserDTO userDTO) {
-		if (userRepository.findOneByName(userDTO.getEmail()) != null) {
-			return true;
-		}
-
-		return false;
 	}
 
 	@Override
 	public UserDetails loadUserById(Long id) {
-		UserEntity user = userRepository.findOne(id);
-
+		UserEntity user = userRepository.findById(id).get();
 		return new CustomUserDetails(user);
 	}
-
 }

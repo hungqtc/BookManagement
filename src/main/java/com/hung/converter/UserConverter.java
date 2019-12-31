@@ -2,21 +2,17 @@ package com.hung.converter;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
 import com.hung.dto.UserDTO;
 import com.hung.entity.RoleEntity;
 import com.hung.entity.UserEntity;
 
 @Component
 public class UserConverter {
-
     @Autowired PasswordEncoder passwordEncoder;
 	 
-
 	public UserEntity toEntity(UserDTO dto) {
 		UserEntity entity = new UserEntity();
 		entity.setStatus(dto.getStatus());
@@ -58,7 +54,5 @@ public class UserConverter {
 			listDTO.add(toDTO(entity));
 		}
 		return listDTO;
-
 	}
-
 }

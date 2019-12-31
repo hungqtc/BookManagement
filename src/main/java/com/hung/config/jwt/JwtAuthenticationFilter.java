@@ -1,11 +1,5 @@
 
-package com.hung.jwt;
-/*******************************************************
- * For Vietnamese readers: Các bạn thân mến, mình rất vui nếu project này giúp
- * ích được cho các bạn trong việc học tập và công việc. Nếu bạn sử dụng lại
- * toàn bộ hoặc một phần source code xin để lại dường dẫn tới github hoặc tên
- * tác giá. Xin cảm ơn!
- *******************************************************/
+package com.hung.config.jwt;
 
 import java.io.IOException;
 
@@ -13,7 +7,6 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,14 +14,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import com.hung.service.UserService;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-
 	@Autowired
 	private JwtTokenProvider tokenProvider;
 
@@ -51,14 +41,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				SecurityContextHolder.getContext().setAuthentication(authentication);
 			}
 		}
-
 		filterChain.doFilter(request, response);
-
 	}
 
 	private String getJwtFromRequest(HttpServletRequest request) {
 		String bearerToken = request.getHeader("Authorization");
-
 		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
 			return bearerToken.substring(7);
 		}

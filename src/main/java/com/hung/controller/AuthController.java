@@ -11,17 +11,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.hung.jwt.JwtTokenProvider;
-import com.hung.payload.LoginRequest;
-import com.hung.payload.LoginResponse;
-import com.hung.security.CustomUserDetails;
+import com.hung.config.jwt.JwtTokenProvider;
+import com.hung.config.security.CustomUserDetails;
+import com.hung.dto.payload.LoginRequest;
+import com.hung.dto.payload.LoginResponse;
 import com.hung.service.UserService;
 
 @RestController
 public class AuthController {
 
-	@Autowired
+	@Autowired(required=false)
 	AuthenticationManager authenticationManager;
 
 	@Autowired
@@ -30,11 +29,11 @@ public class AuthController {
 	@Autowired
 	private UserService userService;
 
-	@PostMapping("/login")
+	@PostMapping("/api/login")
 	public LoginResponse createAuthenticationToken(@Valid @RequestBody LoginRequest loginRequest) throws Exception {
 
 		Authentication authentication = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+		new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
 		UserDetails userDetails = userService.loadUserByUsername(loginRequest.getEmail());
 		

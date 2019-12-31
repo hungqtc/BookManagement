@@ -1,34 +1,17 @@
 
 package com.hung.service;
 
-import java.util.List;
-
-import org.springframework.data.domain.Pageable;
-
 import com.hung.dto.BookDTO;
+import com.hung.dto.output.BookOutput;
 
 public interface BookService {
+	
+	BookOutput findAll(Integer page, Integer limit, String sort, String order, String search);
 
-	List<BookDTO> findAll();
-	
-	List<BookDTO> findAllByUserCreated(String userName, Pageable pageable);
-	
-	List<BookDTO> findAll(Pageable pageable);
-	
-	List<BookDTO> findAllEnable(Pageable pageable);
-	
-	BookDTO findByTitle(String title);
-	
-	BookDTO getById(long id);
+	BookDTO findById(long id);
 
 	BookDTO save(BookDTO BookDTO);
 
 	void delete(long[] ids);
 
-	int totalItem();
-	
-	int totalItemUserCreate(String userName);
-	
-	int totalItemStatus(int status);
-	
 }

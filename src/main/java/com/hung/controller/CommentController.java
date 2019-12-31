@@ -12,39 +12,39 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.hung.dto.RoleDTO;
-import com.hung.service.RoleService;
+import com.hung.dto.CommentDTO;
+import com.hung.service.CommentService;
 
 @RestController
-@RequestMapping("/api/roles")
-public class RoleController {
+@RequestMapping("/api/comments")
+public class CommentController {
 
 	@Autowired
-	RoleService roleService;
+	CommentService commentService;
 
 	@GetMapping
-	public List<RoleDTO> getAll() {
-		return roleService.findAll();
+	public List<CommentDTO> getAll() {
+		return commentService.findAll();
 	}
-	
+
 	@GetMapping(value = "/{id}")
-	public RoleDTO getOneById(@PathVariable long id) {
-		return roleService.findById(id);
+	public CommentDTO getOneById(@PathVariable long id) {
+		return commentService.findById(id);
 	}
-	
-	@DeleteMapping(value = "/{id}")
-	public void deleteRole(@PathVariable long id) {
-		roleService.delete(id);
+
+	@DeleteMapping
+	public void deleteComment(@RequestBody long[] ids) {
+		commentService.delete(ids);
 	}
 
 	@PostMapping
-	public RoleDTO insertRole(@RequestBody RoleDTO role) {
-		return roleService.save(role);
+	public CommentDTO insertComment(@RequestBody CommentDTO comment) {
+		return commentService.save(comment);
 	}
 
 	@PutMapping(value = "/{id}")
-	public RoleDTO editRole(@RequestBody RoleDTO role, @PathVariable long id) {
-		role.setId(id);
-		return roleService.save(role);
+	public CommentDTO editComment(@RequestBody CommentDTO comment, @PathVariable long id) {
+		comment.setId(id);
+		return commentService.save(comment);
 	}
 }

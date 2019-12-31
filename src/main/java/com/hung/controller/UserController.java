@@ -4,54 +4,47 @@ package com.hung.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.hung.dto.UserDTO;
 import com.hung.service.UserService;
 
-
-
 @RestController
+@RequestMapping("/api/users")
 public class UserController {
 
 	@Autowired
 	UserService userService;
 
-	@GetMapping(value = "/user")
+	@GetMapping
 	public List<UserDTO> getAll() {
-		return userService.getAll();
+		return userService.findAll();
 	}
-	
-	@GetMapping(value = "/user/{id}")
+
+	@GetMapping(value = "/{id}")
 	public UserDTO getOneById(@PathVariable long id) {
-		return userService.getById(id);
+		return userService.findById(id);
 	}
-	
-	@DeleteMapping(value = "/user/{id}")
+
+	@DeleteMapping(value = "/{id}")
 	public void deleteUser(@PathVariable long id) {
 		userService.delete(id);
 	}
 
-	@PostMapping(value = "/user")
+	@PostMapping
 	public UserDTO insertUser(@RequestBody UserDTO user) {
-		if (userService.hadUser(user)) {
-			return null;
-		}
-		
 		return userService.save(user);
 	}
 
-	@PutMapping(value = "/user/{id}")
+	@PutMapping(value = "/{id}")
 	public UserDTO editUser(@RequestBody UserDTO user, @PathVariable long id) {
 		user.setId(id);
 		return userService.save(user);
 	}
-
 }

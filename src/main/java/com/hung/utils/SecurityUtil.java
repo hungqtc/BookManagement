@@ -1,26 +1,29 @@
 package com.hung.utils;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import com.hung.security.CustomUserDetails;
+import com.hung.config.security.CustomUserDetails;
 
 public class SecurityUtil {
 	public static CustomUserDetails getPrincipal() {
-		CustomUserDetails myUser =  (CustomUserDetails) (SecurityContextHolder.getContext()).getAuthentication()
-				.getPrincipal();
-		return myUser;
+		if (SecurityContextHolder.getContext().getAuthentication() == null) {
+			return null;
+		}
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if ("anonymousUser".equals(authentication.getPrincipal()) || authentication == null
+				|| !authentication.isAuthenticated()) {
+			return null;
+		}
+		return (CustomUserDetails) (SecurityContextHolder.getContext()).getAuthentication().getPrincipal();
 	}
-	
+
 	public static String checkRoleUser(String role) {
-		
-		if (role.concat("[ROLE_ADMIN]") != null) {
+		if (role.contains("[ROLE_ADMIN]")) {
 			return "ADMIN";
-		} 
-		else if (role.concat("[ROLE_USER]") != null) {
+		} else if (role.contains("[ROLE_USER]")) {
 			return "USER";
-		} 
-		
+		}
 		return null;
-		
 	}
 }

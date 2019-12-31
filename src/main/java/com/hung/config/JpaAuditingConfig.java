@@ -1,5 +1,7 @@
 package com.hung.config;
 
+import java.util.Optional;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
@@ -10,20 +12,20 @@ import org.springframework.security.core.context.SecurityContextHolder;
 @Configuration
 @EnableJpaAuditing(auditorAwareRef = "auditorProvider")
 public class JpaAuditingConfig {
-	
-	@Bean
-    public AuditorAware<String> auditorProvider() {
-        return new AuditorAwareImpl();
-    }
 
-    public static class AuditorAwareImpl implements AuditorAware<String> {
-        @Override
-        public String getCurrentAuditor() {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication == null || !authentication.isAuthenticated()) {
-                return null;
-            }
-            return authentication.getName();
-        }
-    }
+	@Bean
+	public AuditorAware<String> auditorProvider() {
+		return new AuditorAwareImpl();
+	}
+
+	public static class AuditorAwareImpl implements AuditorAware<String> {
+		@Override
+		public Optional<String> getCurrentAuditor() {
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			if (authentication == null || !authentication.isAuthenticated()) {
+				return null;
+			}
+			return Optional.of(authentication.getName());
+		}
+	}
 }
