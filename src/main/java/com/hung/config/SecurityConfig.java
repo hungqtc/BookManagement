@@ -20,7 +20,14 @@ import com.hung.service.impls.UserServiceImpl;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
+	
+	private static final String[] AUTH_LIST = {
+	        "/swagger-resources/**",
+	        "/swagger-ui.html",
+	        "/v2/api-docs",
+	        "/webjars/**"
+	};
+	
 	@Autowired
 	UserServiceImpl userServiceImpl;
 
@@ -52,10 +59,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()
 			.antMatchers(HttpMethod.GET,"/api/books").permitAll() 
 			.antMatchers(HttpMethod.GET,"/api/comments").permitAll() 
-			.antMatchers("/api/book/{id}").permitAll()
+			.antMatchers(HttpMethod.GET,"/api/books/{id}").permitAll()
+			.antMatchers(HttpMethod.GET,"/api/comments/{id}").permitAll()
 			.antMatchers("/api/login").permitAll()
+			.antMatchers(AUTH_LIST).permitAll()
+				/*
+				 * .antMatchers("/webjars/**").permitAll()
+				 * .antMatchers("/swagger-resources/**").permitAll()
+				 * .antMatchers("/v2/api-docs").permitAll()
+				 * .antMatchers("/swagger-ui.html").permitAll()
+				 */
 			.antMatchers("/api/users", "/api/roles").hasRole("ADMIN")
-			.antMatchers("/api/comments").authenticated();
+			.anyRequest().authenticated() ;
+			
 		http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
 }

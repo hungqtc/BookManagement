@@ -60,20 +60,25 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public BookDTO save(BookDTO bookDTO) {
-		if (bookRepository.findByTitle(bookDTO.getTitle()) != null) {
-			throw new BookExistionException();
-		}
+		
 		checkLogin();
 		BookEntity bookEntity = new BookEntity();
 
 		if (bookDTO.getId() != null) {
+			
 			BookEntity oldBookEntity = bookRepository.findById(bookDTO.getId()).get();
+			if (!bookDTO.getTitle().equals(oldBookEntity.getTitle()) && (bookRepository.findByTitle(bookDTO.getTitle()) != null)) {
+				throw new BookExistionException();
+			}
 			if (("ADMIN").equals(userRoles) || userLogin.getUsername().equals(oldBookEntity.getCreatedBy())) {
 				bookEntity = bookConverter.toEntity(bookDTO, oldBookEntity);
 			} else {
 				throw new UnauthorizedException();
 			}
 		} else {
+			if (bookRepository.findByTitle(bookDTO.getTitle()) != null) {
+				throw new BookExistionException();
+			}
 			bookEntity = bookConverter.toEntity(bookDTO);
 			String email = userLogin.getUsername();
 			bookEntity.setUser(userRepository.findByEmail(email));

@@ -13,6 +13,7 @@ import com.hung.converter.UserConverter;
 import com.hung.dto.UserDTO;
 import com.hung.entity.RoleEntity;
 import com.hung.entity.UserEntity;
+import com.hung.exceptions.BookExistionException;
 import com.hung.exceptions.UserExistionException;
 import com.hung.repository.RoleRepository;
 import com.hung.repository.UserRepository;
@@ -43,15 +44,18 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserDTO save(UserDTO userDTO) {
-		if (userRepository.findByEmail(userDTO.getEmail()) != null) {
-			throw new UserExistionException();
-		}
 		
 		UserEntity userEntity = new UserEntity();
 		if (userDTO.getId() != null) {
 			UserEntity oldUserEntity = userRepository.findById(userDTO.getId()).get();
+			if (!userDTO.getEmail().equals(oldUserEntity.getEmail()) && (userRepository.findByEmail(userDTO.getEmail()) != null)) {
+				throw new BookExistionException();
+			}
 			userEntity = userConverter.toEntity(userDTO, oldUserEntity);
 		} else {
+			if (userRepository.findByEmail(userDTO.getEmail()) != null) {
+				throw new UserExistionException();
+			}
 			userEntity = userConverter.toEntity(userDTO);
 		}
 
@@ -62,7 +66,6 @@ public class UserServiceImpl implements UserService {
 			RoleEntity roleEntity = roleRepository.findOneByName(listRole.get(i));
 			listRoleEntity.add(roleEntity);
 		}
-
 		userEntity.setRoles(listRoleEntity);
 		userEntity = userRepository.save(userEntity);
 		return UserConverter.toDTO(userEntity);
