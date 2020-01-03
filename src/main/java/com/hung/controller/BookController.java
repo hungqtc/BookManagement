@@ -35,7 +35,6 @@ public class BookController {
 	@GetMapping(value = "/{id}")
 	public BookDTO getOneById(@PathVariable long id) {
 		return bookService.findById(id);
-
 	}
 
 	@DeleteMapping()
@@ -52,7 +51,6 @@ public class BookController {
 	public BookDTO editBook(@RequestBody BookDTO book, @PathVariable long id) {
 		book.setId(id);
 		return bookService.save(book);
-
 	}
 
 }

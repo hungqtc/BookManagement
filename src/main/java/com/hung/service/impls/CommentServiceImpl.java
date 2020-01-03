@@ -12,6 +12,7 @@ import com.hung.dto.CommentDTO;
 import com.hung.entity.BookEntity;
 import com.hung.entity.CommentEntity;
 import com.hung.entity.UserEntity;
+import com.hung.exceptions.UnauthorizedException;
 import com.hung.repository.BookRepository;
 import com.hung.repository.CommentRepository;
 import com.hung.repository.UserRepository;
@@ -53,6 +54,9 @@ public class CommentServiceImpl implements CommentService {
 			commentEntity = commentConverter.toEntity(commentDTO, oldCommentEntity);
 		} else {
 			commentEntity = commentConverter.toEntity(commentDTO);
+		}
+		if (SecurityUtil.getPrincipal() == null) {
+			throw new UnauthorizedException();
 		}
 		CustomUserDetails userDetails = SecurityUtil.getPrincipal();
 		BookEntity bookEntity = bookRepository.findByTitle(commentDTO.getBookTitle());
