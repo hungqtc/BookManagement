@@ -51,7 +51,7 @@ public class RoleServiceImpl implements RoleService {
 		ArrayList<UserEntity> listUserEntity = new ArrayList<UserEntity>();
 		for (int i = 0; i < listUserDTO.size(); i++) {
 
-			UserEntity userEntity = userRepository.findByEmail(listUserDTO.get(i));
+			UserEntity userEntity = userRepository.findByName(listUserDTO.get(i));
 			listUserEntity.add(userEntity);
 		}
 		roleEntity.setUsers(listUserEntity);

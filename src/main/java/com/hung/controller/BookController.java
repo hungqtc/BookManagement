@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.hung.dto.BookDTO;
 import com.hung.dto.output.BookOutput;
 import com.hung.service.BookService;
@@ -27,9 +28,10 @@ public class BookController {
 			@RequestParam(value = "limit", required = false) Integer limit,
 			@RequestParam(value = "sort", required = false) String sort,
 			@RequestParam(value = "order", required = false, defaultValue = "id") String order,
-			@RequestParam(value = "search", required = false) String search) {
+			@RequestParam(value = "search", required = false) String search,
+			@RequestParam(value = "status", required = false, defaultValue = "1")  Integer status) {
 
-		return bookService.findAll(page, limit, sort, order, search);
+		return bookService.findAll(page, limit, sort, order, search, status);
 	}
 
 	@GetMapping(value = "/{id}")

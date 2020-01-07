@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.hung.dto.CommentDTO;
 import com.hung.service.CommentService;
@@ -23,8 +24,8 @@ public class CommentController {
 	CommentService commentService;
 
 	@GetMapping
-	public List<CommentDTO> getAll() {
-		return commentService.findAll();
+	public List<CommentDTO> getAll(@RequestParam(value = "bookId", required = true) long bookId) {
+		return commentService.findAllByBook(bookId);
 	}
 
 	@GetMapping(value = "/{id}")
@@ -32,19 +33,19 @@ public class CommentController {
 		return commentService.findById(id);
 	}
 
-	@DeleteMapping
-	public void deleteComment(@RequestBody long[] ids) {
-		commentService.delete(ids);
+	@DeleteMapping(value = "/{id}")
+	public void deleteComment(@PathVariable long id) {
+		commentService.delete(id);
 	}
 
 	@PostMapping
-	public CommentDTO insertComment(@RequestBody CommentDTO comment) {
-		return commentService.save(comment);
+	public CommentDTO insertComment(@RequestBody CommentDTO comment, @RequestParam(value = "bookId", required = true) long bookId) {
+		return commentService.save(comment, bookId);
 	}
 
 	@PutMapping(value = "/{id}")
-	public CommentDTO editComment(@RequestBody CommentDTO comment, @PathVariable long id) {
+	public CommentDTO editComment(@RequestBody CommentDTO comment, @PathVariable long id, @RequestParam(value = "bookId", required = true) long bookId) {
 		comment.setId(id);
-		return commentService.save(comment);
+		return commentService.save(comment, bookId);
 	}
 }

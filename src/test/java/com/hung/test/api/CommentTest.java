@@ -43,9 +43,11 @@ public class CommentTest {
 		CommentDTO comment = new CommentDTO("hay", "Ngồi Khóc Trên Cây");
 		CommentDTO comment2 = new CommentDTO("hay qua", "Ngồi Khóc Trên Cây");
 		List<CommentDTO> listComment = Arrays.asList(comment, comment2);
-		given(commentService.findAll()).willReturn(listComment);
+		given(commentService.findAllByBook(1)).willReturn(listComment);
 
-		mvc.perform(get("/api/comments").contentType(MediaType.APPLICATION_JSON))
+		mvc.perform(get("/api/comments")
+				.param("bookId", "1")
+				.contentType(MediaType.APPLICATION_JSON))
 				.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(2)))
@@ -69,9 +71,11 @@ public class CommentTest {
 	@Test
 	public void insertComment() throws Exception {
 		CommentDTO comment = new CommentDTO("hay", "Ngồi Khóc Trên Cây");
-		given(commentService.save(comment)).willReturn(comment);
+		long bookId = 1;
+		given(commentService.save(comment, bookId)).willReturn(comment);
 		
 		mvc.perform(MockMvcRequestBuilders.post("/api/comments")
+				.param("bookId", "1")
 			    .content(asJsonString( new CommentDTO("hay", "Ngồi Khóc Trên Cây"))) 
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
@@ -85,9 +89,10 @@ public class CommentTest {
 		CommentDTO comment = new CommentDTO("hay", "Ngồi Khóc Trên Cây");
 		long id = 1;
 		comment.setId(id);
-		given(commentService.save(comment)).willReturn(comment);
+		given(commentService.save(comment, id)).willReturn(comment);
 		
 		mvc.perform(MockMvcRequestBuilders.put("/api/comments/{id}", id)
+				.param("bookId", "1")
 				.content(asJsonString(new CommentDTO("hay", "Ngồi Khóc Trên Cây"))) 
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
@@ -98,16 +103,9 @@ public class CommentTest {
 	
 	@Test
 	public void deleteComment() throws Exception {
-		List<Long> list = new ArrayList<>();
-		list.add((long) 5);
-		list.add((long) 1);
-		
-		mvc.perform(MockMvcRequestBuilders.delete("/api/comments") 
-			    .content(asJsonString(list))
-				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
-				.andDo(print())
+		mvc.perform( MockMvcRequestBuilders.delete("/api/comments/{id}", 1))
 				.andExpect(status().isOk());
-	}
+		}
 
 	public static String asJsonString(final Object obj) {
 	    try {

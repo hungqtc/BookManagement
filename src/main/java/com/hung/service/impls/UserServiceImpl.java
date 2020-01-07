@@ -13,7 +13,6 @@ import com.hung.converter.UserConverter;
 import com.hung.dto.UserDTO;
 import com.hung.entity.RoleEntity;
 import com.hung.entity.UserEntity;
-import com.hung.exceptions.BookExistionException;
 import com.hung.exceptions.UserExistionException;
 import com.hung.repository.RoleRepository;
 import com.hung.repository.UserRepository;
@@ -48,12 +47,12 @@ public class UserServiceImpl implements UserService {
 		UserEntity userEntity = new UserEntity();
 		if (userDTO.getId() != null) {
 			UserEntity oldUserEntity = userRepository.findById(userDTO.getId()).get();
-			if (!userDTO.getEmail().equals(oldUserEntity.getEmail()) && (userRepository.findByEmail(userDTO.getEmail()) != null)) {
-				throw new BookExistionException();
+			if (!userDTO.getName().equals(oldUserEntity.getName()) && (userRepository.findByName(userDTO.getName()) != null)) {
+				throw new UserExistionException();
 			}
 			userEntity = userConverter.toEntity(userDTO, oldUserEntity);
 		} else {
-			if (userRepository.findByEmail(userDTO.getEmail()) != null) {
+			if (userRepository.findByName(userDTO.getName()) != null) {
 				throw new UserExistionException();
 			}
 			userEntity = userConverter.toEntity(userDTO);
@@ -79,7 +78,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-		UserEntity user = userRepository.findByEmail(username);
+		UserEntity user = userRepository.findByName(username);
 		if (user == null) {
 			throw new UsernameNotFoundException(username);
 		}

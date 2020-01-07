@@ -25,7 +25,7 @@ public class RoleConverter {
 		
 		List<UserEntity> listUser = entity.getUsers();
 		for (UserEntity userEntity : listUser) {
-			listString.add(userEntity.getEmail());
+			listString.add(userEntity.getName());
 		}
 		dto.setUsers(listString);
 		dto.setCreatedDate(entity.getCreatedDate());

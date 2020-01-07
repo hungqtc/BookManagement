@@ -49,7 +49,7 @@ public class UserTest {
 				.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(2)))
-				.andExpect(jsonPath("$[0].email", is(listUser.get(0).getEmail())))
+				.andExpect(jsonPath("$[0].Name", is(listUser.get(0).getName())))
 				.andExpect(jsonPath("$[0].roles", is(hung.getRoles())));
 	}
 
@@ -64,7 +64,7 @@ public class UserTest {
 		mvc.perform(get("/api/users/{id}", id).contentType(MediaType.APPLICATION_JSON))
 				.andDo(print())
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.email", is(hung.getEmail())))
+				.andExpect(jsonPath("$.Name", is(hung.getName())))
 				.andExpect(jsonPath("$.roles", is(hung.getRoles())));
 	}
 
@@ -81,7 +81,7 @@ public class UserTest {
 				.accept(MediaType.APPLICATION_JSON))
 				.andDo(print())
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.email", is(van.getEmail())));
+				.andExpect(jsonPath("$.Name", is(van.getName())));
 	}
 	
 	@Test
@@ -97,7 +97,7 @@ public class UserTest {
 				.accept(MediaType.APPLICATION_JSON))
 				.andDo(print())
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.email", is(van.getEmail())));
+				.andExpect(jsonPath("$.Name", is(van.getName())));
 	}
 	
 	@Test

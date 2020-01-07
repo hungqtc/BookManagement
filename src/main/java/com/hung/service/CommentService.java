@@ -7,17 +7,17 @@ import org.springframework.data.domain.Pageable;
 import com.hung.dto.CommentDTO;
 
 public interface CommentService {
-	List<CommentDTO> findAll();
+	List<CommentDTO> findAllByBook(long bookId);
 	
 	List<CommentDTO> findAll(Pageable pageable);
 	
 	CommentDTO findById(Long id);
 
-	CommentDTO save(CommentDTO commentDTO);
+	CommentDTO save(CommentDTO commentDTO, long bookId);
 
-	void delete(long[] ids);
+	void delete(long id);
 	
-	void delete(long userId);
+	void deleteByUser(long userId);
 	
 	void deleteByBook(long[] ids);
 	

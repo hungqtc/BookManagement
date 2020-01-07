@@ -31,11 +31,11 @@ public class CommentServiceImpl implements CommentService {
 	private CommentConverter commentConverter;
 
 	@Autowired
-	private BookRepository bookRepository;
+	private BookRepository bookRepository ;
 
 	@Override
-	public List<CommentDTO> findAll() {
-		List<CommentEntity> listEntity = commentRepository.findAll();
+	public List<CommentDTO> findAllByBook(long bookId) {
+		List<CommentEntity> listEntity = commentRepository.findByBook(bookId);
 		return commentConverter.toDTO(listEntity);
 	}
 
@@ -46,32 +46,27 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 	@Override
-	public CommentDTO save(CommentDTO commentDTO) {
+	public CommentDTO save(CommentDTO commentDTO, long bookId) {
+		SecurityUtil.checkLogin();
 		CommentEntity commentEntity = new CommentEntity();
 
 		if (commentDTO.getId() != null) {
-			CommentEntity oldCommentEntity = commentRepository.findById(commentDTO.getId()).get();
-			commentEntity = commentConverter.toEntity(commentDTO, oldCommentEntity);
+			CommentEntity oldComment = commentRepository.findById(commentDTO.getId()).get();
+			if (("ADMIN").equals(SecurityUtil.userRoles) || SecurityUtil.userLogin.getUsername().equals(oldComment.getCreatedBy())) {
+				commentEntity = commentConverter.toEntity(commentDTO, oldComment);
+			} else {
+				throw new UnauthorizedException();
+			}
 		} else {
 			commentEntity = commentConverter.toEntity(commentDTO);
 		}
-		if (SecurityUtil.getPrincipal() == null) {
-			throw new UnauthorizedException();
-		}
 		CustomUserDetails userDetails = SecurityUtil.getPrincipal();
-		BookEntity bookEntity = bookRepository.findByTitle(commentDTO.getBookTitle());
-		UserEntity userEntity = userRepository.findByEmail(userDetails.getUsername());
+		BookEntity bookEntity = bookRepository.findById(bookId).get();
+		UserEntity userEntity = userRepository.findByName(userDetails.getUsername());
 		commentEntity.setBook(bookEntity);
 		commentEntity.setUser(userEntity);
 		commentEntity = commentRepository.save(commentEntity);
 		return CommentConverter.toDTO(commentEntity);
-	}
-
-	@Override
-	public void delete(long[] ids) {
-		for (long item : ids) {
-			commentRepository.deleteById(item);
-		}
 	}
 
 	@Override
@@ -86,6 +81,16 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 	@Override
+	public void delete(long id) {
+		SecurityUtil.checkLogin();
+		CommentEntity comment = commentRepository.findById(id).get();
+		if (!SecurityUtil.userLogin.getUsername().equals(comment.getCreatedBy())) {
+			throw new UnauthorizedException();
+		}
+		commentRepository.delete(comment);
+	}
+
+	@Override
 	public void deleteByBook(long[] ids) {
 		for (long id : ids) {
 			commentRepository.deleteByBook(id);
@@ -93,7 +98,7 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 	@Override
-	public void delete(long id) {
-		commentRepository.deleteByUserCreated(id);
+	public void deleteByUser(long userId) {
+		commentRepository.deleteByUserCreated(userId);
 	}
 }

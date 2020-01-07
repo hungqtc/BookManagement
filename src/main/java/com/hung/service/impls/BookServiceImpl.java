@@ -11,13 +11,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
-import com.hung.config.security.CustomUserDetails;
 import com.hung.constants.CommonConstant;
 import com.hung.converter.BookConverter;
 import com.hung.dto.BookDTO;
 import com.hung.dto.output.BookOutput;
 import com.hung.entity.BookEntity;
 import com.hung.exceptions.BookExistionException;
+import com.hung.exceptions.StatusException;
 import com.hung.exceptions.UnauthorizedException;
 import com.hung.repository.BookRepository;
 import com.hung.repository.UserRepository;
@@ -25,6 +25,7 @@ import com.hung.service.BookService;
 import com.hung.service.CommentService;
 import com.hung.utils.PageUtil;
 import com.hung.utils.SecurityUtil;
+import com.hung.utils.StringUtil;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -41,17 +42,6 @@ public class BookServiceImpl implements BookService {
 	@Autowired
 	private UserRepository userRepository;
 
-	private CustomUserDetails userLogin;
-
-	private String userRoles;
-
-	private void checkLogin() {
-		if (SecurityUtil.getPrincipal() != null) {
-			userLogin = SecurityUtil.getPrincipal();
-			userRoles = SecurityUtil.checkRoleUser(userLogin.getAuthorities().toString());
-		}
-	}
-
 	@Override
 	public BookDTO findById(long id) {
 		BookEntity entity = bookRepository.findById(id).get();
@@ -60,17 +50,16 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public BookDTO save(BookDTO bookDTO) {
-		
-		checkLogin();
+		SecurityUtil.checkLogin();
 		BookEntity bookEntity = new BookEntity();
 
 		if (bookDTO.getId() != null) {
-			
 			BookEntity oldBookEntity = bookRepository.findById(bookDTO.getId()).get();
-			if (!bookDTO.getTitle().equals(oldBookEntity.getTitle()) && (bookRepository.findByTitle(bookDTO.getTitle()) != null)) {
-				throw new BookExistionException();
-			}
-			if (("ADMIN").equals(userRoles) || userLogin.getUsername().equals(oldBookEntity.getCreatedBy())) {
+			if (("ADMIN").equals(SecurityUtil.userRoles) || SecurityUtil.userLogin.getUsername().equals(oldBookEntity.getCreatedBy())) {
+				if (!bookDTO.getTitle().equals(oldBookEntity.getTitle())
+						&& (bookRepository.findByTitle(bookDTO.getTitle()) != null)) {
+					throw new BookExistionException();
+				}
 				bookEntity = bookConverter.toEntity(bookDTO, oldBookEntity);
 			} else {
 				throw new UnauthorizedException();
@@ -80,8 +69,8 @@ public class BookServiceImpl implements BookService {
 				throw new BookExistionException();
 			}
 			bookEntity = bookConverter.toEntity(bookDTO);
-			String email = userLogin.getUsername();
-			bookEntity.setUser(userRepository.findByEmail(email));
+			String userName = SecurityUtil.userLogin.getUsername();
+			bookEntity.setUser(userRepository.findByName(userName));
 		}
 		bookEntity = bookRepository.save(bookEntity);
 		return bookConverter.toDTO(bookEntity);
@@ -89,10 +78,10 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public void delete(long[] ids) {
-		checkLogin();
+		SecurityUtil.checkLogin();
 		for (Long id : ids) {
 			BookEntity book = bookRepository.findById(id).get();
-			if (!userLogin.getUsername().equals(book.getCreatedBy())) {
+			if (!SecurityUtil.userLogin.getUsername().equals(book.getCreatedBy())) {
 				throw new UnauthorizedException();
 			}
 		}
@@ -104,7 +93,11 @@ public class BookServiceImpl implements BookService {
 	}
 
 	@Override
-	public BookOutput findAll(Integer page, Integer limit, String sort, String order, String search) {
+	public BookOutput findAll(Integer page, Integer limit, String sort, String order, String search, Integer status) {
+		if (status !=0  && status !=1 ) {
+			throw new StatusException();
+		}
+		
 		List<BookEntity> listBookResult = new ArrayList<>();
 		int totalItem = 0;
 		BookOutput bookOutput = new BookOutput();
@@ -115,25 +108,26 @@ public class BookServiceImpl implements BookService {
 				objSort = new Sort(Direction.DESC, order);
 			}
 			Pageable pageable = PageRequest.of(page - 1, limit, objSort);
-			
-			checkLogin();
+
+			SecurityUtil.checkLogin();
 			if (search != null) {
-				search = "%" + search + "%";
-				listBookResult = bookRepository.findByTitleOrAuthor(search, search, CommonConstant.STATUS_ENABLE,
+				search = "%" + StringUtil.covertToString(search).toLowerCase() + "%"; 
+				totalItem = bookRepository.countByTitleOrAuthor(search, search, status);
+				listBookResult = bookRepository.findByTitleOrAuthor(search, search, status,
 						pageable);
 			}
 			// check userRole
-			else if (("ADMIN").equals(userRoles)) {
-				listBookResult = bookRepository.findAll(pageable).getContent();
-				totalItem = (int) bookRepository.count();
-
-			} else if (("USER").equals(userRoles)) {
-				String userName = userLogin.getUsername();
+			else if (("ADMIN").equals(SecurityUtil.userRoles)) {
+				listBookResult = bookRepository.findByStatus(status, pageable);
+				totalItem = bookRepository.count(status);
+			} else if (("USER").equals(SecurityUtil.userRoles)) {
+				String userName = SecurityUtil.userLogin.getUsername();
 				totalItem = bookRepository.count(userName);
 				listBookResult = bookRepository.findByCreatedBy(userName, pageable);
 			} else {
-				totalItem = bookRepository.count(CommonConstant.STATUS_ENABLE);
-				listBookResult = bookRepository.findByStatus(CommonConstant.STATUS_ENABLE, pageable);
+				status = 1;
+				totalItem = bookRepository.count(status);
+				listBookResult = bookRepository.findByStatus(status, pageable);
 			}
 			bookOutput.setPage(page);
 			bookOutput.setTotalPage(PageUtil.totalPage(totalItem, limit));

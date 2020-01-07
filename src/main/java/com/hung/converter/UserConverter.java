@@ -16,7 +16,7 @@ public class UserConverter {
 	public UserEntity toEntity(UserDTO dto) {
 		UserEntity entity = new UserEntity();
 		entity.setStatus(dto.getStatus());
-		entity.setEmail(dto.getEmail());
+		entity.setName(dto.getName());
 	    entity.setPassword(passwordEncoder.encode(dto.getPassword())); 
 		return entity;
 	}
@@ -27,7 +27,7 @@ public class UserConverter {
 		if (entity.getId() != null) {
 			dto.setId(entity.getId());
 		}
-		dto.setEmail(entity.getEmail());
+		dto.setName(entity.getName());
 		dto.setStatus(entity.getStatus());
 
 		List<RoleEntity> listRole = entity.getRoles();
