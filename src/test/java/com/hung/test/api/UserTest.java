@@ -49,7 +49,7 @@ public class UserTest {
 				.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(2)))
-				.andExpect(jsonPath("$[0].username", is(listUser.get(0).getUsername())))
+				.andExpect(jsonPath("$[0].email", is(listUser.get(0).getEmail())))
 				.andExpect(jsonPath("$[0].roles", is(hung.getRoles())));
 	}
 
@@ -64,7 +64,7 @@ public class UserTest {
 		mvc.perform(get("/api/users/{id}", id).contentType(MediaType.APPLICATION_JSON))
 				.andDo(print())
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.username", is(hung.getUsername())))
+				.andExpect(jsonPath("$.email", is(hung.getEmail())))
 				.andExpect(jsonPath("$.roles", is(hung.getRoles())));
 	}
 
@@ -72,7 +72,7 @@ public class UserTest {
 	public void insertUser() throws Exception {
 		List<String> roles = new ArrayList<>();
 		roles.add("ADMIN");
-		UserDTO van = new UserDTO("van", "123456", 1, roles);
+		UserDTO van = new UserDTO("van@gmail.com", "123456", 1, roles);
 		given(userService.save(van)).willReturn(van);
 		
 		mvc.perform(MockMvcRequestBuilders.post("/api/users")
@@ -81,7 +81,7 @@ public class UserTest {
 				.accept(MediaType.APPLICATION_JSON))
 				.andDo(print())
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.username", is(van.getUsername())));
+				.andExpect(jsonPath("$.email", is(van.getEmail())));
 	}
 	
 	@Test
@@ -97,7 +97,7 @@ public class UserTest {
 				.accept(MediaType.APPLICATION_JSON))
 				.andDo(print())
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.username", is(van.getUsername())));
+				.andExpect(jsonPath("$.email", is(van.getEmail())));
 	}
 	
 	@Test

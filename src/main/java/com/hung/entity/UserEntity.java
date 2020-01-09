@@ -19,8 +19,8 @@ import lombok.Data;
 @Data
 @Table(name = "users")
 public class UserEntity extends BaseEntity {
-	@Column(name = "name")
-	private String username;
+	@Column(name = "email")
+	private String email;
 
 	@Column(name = "password")
 	private String password;

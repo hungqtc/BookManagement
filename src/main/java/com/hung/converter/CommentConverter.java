@@ -20,7 +20,6 @@ public class CommentConverter {
 			dto.setId(entity.getId());
 		}
 		dto.setMessage(entity.getMessage());
-		dto.setBookTitle(entity.getBook().getTitle());
 		dto.setCreatedDate(entity.getCreatedDate());
 		dto.setCreatedBy(entity.getCreatedBy());
 		dto.setModifiedDate(entity.getModifiedDate());

@@ -12,5 +12,4 @@ import lombok.NoArgsConstructor;
 public class CommentDTO extends BaseDTO {
 	@NotBlank(message = "Please provide a message")
 	private String message;
-	private String bookTitle;
 }

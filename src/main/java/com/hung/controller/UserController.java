@@ -3,6 +3,8 @@ package com.hung.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.hung.dto.UserDTO;
+import com.hung.service.MailService;
 import com.hung.service.UserService;
 
 @RestController
@@ -38,12 +41,12 @@ public class UserController {
 	}
 
 	@PostMapping
-	public UserDTO insertUser(@RequestBody UserDTO user) {
+	public UserDTO insertUser(@Valid @RequestBody UserDTO user) {
 		return userService.save(user);
 	}
 
 	@PutMapping(value = "/{id}")
-	public UserDTO editUser(@RequestBody UserDTO user, @PathVariable long id) {
+	public UserDTO editUser(@Valid @RequestBody UserDTO user, @PathVariable long id) {
 		user.setId(id);
 		return userService.save(user);
 	}

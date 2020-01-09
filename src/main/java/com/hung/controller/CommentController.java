@@ -3,6 +3,8 @@ package com.hung.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,12 +36,12 @@ public class CommentController {
 	}
 
 	@PostMapping(value = "/{bid}")
-	public CommentDTO insertComment(@RequestBody CommentDTO comment, @PathVariable long bid) {
+	public CommentDTO insertComment(@Valid @RequestBody CommentDTO comment, @PathVariable long bid) {
 		return commentService.save(comment, bid);
 	}
 
 	@PutMapping(value = "/{bid}/{id}")
-	public CommentDTO editComment(@RequestBody CommentDTO comment, @PathVariable long bid, @PathVariable long id) {
+	public CommentDTO editComment(@Valid @RequestBody CommentDTO comment, @PathVariable long bid, @PathVariable long id) {
 		comment.setId(id);
 		return commentService.save(comment, bid);
 	}

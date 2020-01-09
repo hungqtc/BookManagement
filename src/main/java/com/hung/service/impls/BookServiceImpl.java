@@ -68,8 +68,8 @@ public class BookServiceImpl implements BookService {
 				throw new BookExistionException();
 			}
 			bookEntity = bookConverter.toEntity(bookDTO);
-			String userName = SecurityUtil.userLogin.getUsername();
-			bookEntity.setUser(userRepository.findByUsername(userName));
+			String email = SecurityUtil.userLogin.getUsername();
+			bookEntity.setUser(userRepository.findByEmail(email));
 		}
 		bookEntity = bookRepository.save(bookEntity);
 		return bookConverter.toDTO(bookEntity);

@@ -16,12 +16,16 @@ import com.hung.entity.UserEntity;
 import com.hung.exceptions.UserExistionException;
 import com.hung.repository.RoleRepository;
 import com.hung.repository.UserRepository;
+import com.hung.service.MailService;
 import com.hung.service.UserService;
 
 @Service
 public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	MailService mailService;
 
 	@Autowired
 	private RoleRepository roleRepository;
@@ -47,12 +51,12 @@ public class UserServiceImpl implements UserService {
 		UserEntity userEntity = new UserEntity();
 		if (userDTO.getId() != null) {
 			UserEntity oldUserEntity = userRepository.findById(userDTO.getId()).get();
-			if (!userDTO.getUsername().equals(oldUserEntity.getUsername()) && (userRepository.findByUsername(userDTO.getUsername()) != null)) {
+			if (!userDTO.getEmail().equals(oldUserEntity.getEmail()) && (userRepository.findByEmail(userDTO.getEmail()) != null)) {
 				throw new UserExistionException();
 			}
 			userEntity = userConverter.toEntity(userDTO, oldUserEntity);
 		} else {
-			if (userRepository.findByUsername(userDTO.getUsername()) != null) {
+			if (userRepository.findByEmail(userDTO.getEmail()) != null) {
 				throw new UserExistionException();
 			}
 			userEntity = userConverter.toEntity(userDTO);
@@ -67,6 +71,9 @@ public class UserServiceImpl implements UserService {
 		}
 		userEntity.setRoles(listRoleEntity);
 		userEntity = userRepository.save(userEntity);
+		if (userRepository.save(userEntity) != null) {
+			mailService.sendMail(userDTO);
+		}
 		return UserConverter.toDTO(userEntity);
 	}
 
@@ -78,7 +85,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-		UserEntity user = userRepository.findByUsername(username);
+		UserEntity user = userRepository.findByEmail(username);
 		if (user == null) {
 			throw new UsernameNotFoundException(username);
 		}
