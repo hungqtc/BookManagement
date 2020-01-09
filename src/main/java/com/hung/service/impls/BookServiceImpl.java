@@ -69,7 +69,7 @@ public class BookServiceImpl implements BookService {
 			}
 			bookEntity = bookConverter.toEntity(bookDTO);
 			String userName = SecurityUtil.userLogin.getUsername();
-			bookEntity.setUser(userRepository.findByUserName(userName));
+			bookEntity.setUser(userRepository.findByUsername(userName));
 		}
 		bookEntity = bookRepository.save(bookEntity);
 		return bookConverter.toDTO(bookEntity);
