@@ -88,7 +88,7 @@ public class UserTest {
 	public void editUser() throws Exception {
 		List<String> roles = new ArrayList<>();
 		roles.add("ADMIN");
-		UserDTO van = new UserDTO("van", "123456", 1, roles);
+		UserDTO van = new UserDTO("van@gmail.com", "123456", 1, roles);
 		
 		given(userService.save(van)).willReturn(van);
 		mvc.perform(MockMvcRequestBuilders.put("/api/users/{id}", 1)

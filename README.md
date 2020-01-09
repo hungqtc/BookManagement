@@ -14,6 +14,6 @@
 
 ## Use Postman to call API
  * Ex: https://localhost:8082/api/books
- * Info User Login: (user/password/role)
- * hung/123456/ADMIN
- * hoa/123456/USER
+ * Info User Login: (email/password/role)
+ * hungqtc97@gmail.com/123456/ADMIN
+ * hoahong123@gmail.com/123456/USER
