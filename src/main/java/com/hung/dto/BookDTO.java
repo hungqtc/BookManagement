@@ -14,11 +14,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @Data
 public class BookDTO extends BaseDTO{
-	@NotBlank 
+	@NotBlank(message = "Please provide a title") 
 	private String title;
 	private String description;
 	
-	@NotBlank 
+	@NotBlank(message = "Please provide an author") 
 	private String author;
 	private String image;
 	private int status;

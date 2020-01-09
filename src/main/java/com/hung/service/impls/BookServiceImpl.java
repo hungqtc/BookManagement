@@ -11,7 +11,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
-import com.hung.constants.CommonConstant;
 import com.hung.converter.BookConverter;
 import com.hung.dto.BookDTO;
 import com.hung.dto.output.BookOutput;
@@ -70,7 +69,7 @@ public class BookServiceImpl implements BookService {
 			}
 			bookEntity = bookConverter.toEntity(bookDTO);
 			String userName = SecurityUtil.userLogin.getUsername();
-			bookEntity.setUser(userRepository.findByName(userName));
+			bookEntity.setUser(userRepository.findByUserName(userName));
 		}
 		bookEntity = bookRepository.save(bookEntity);
 		return bookConverter.toDTO(bookEntity);

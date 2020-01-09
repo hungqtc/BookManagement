@@ -20,14 +20,12 @@ import lombok.Data;
 public class BookEntity extends BaseEntity {
 
 	@Column(name = "title")
-	@NotBlank 
 	private String title;
 	
 	@Column(name = "non_utf8_title")
 	private String noUtf8Title;
 
 	@Column(name = "author")
-	@NotBlank 
 	private String author;
 	
 	@Column(name = "non_utf8_author")

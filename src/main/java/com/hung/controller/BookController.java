@@ -1,6 +1,8 @@
 
 package com.hung.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +24,7 @@ public class BookController {
 
 	@Autowired
 	BookService bookService;
-
+	
 	@GetMapping()
 	public BookOutput getAll(@RequestParam(value = "page", required = false) Integer page,
 			@RequestParam(value = "limit", required = false) Integer limit,
@@ -30,7 +32,6 @@ public class BookController {
 			@RequestParam(value = "order", required = false, defaultValue = "id") String order,
 			@RequestParam(value = "search", required = false) String search,
 			@RequestParam(value = "status", required = false, defaultValue = "1")  Integer status) {
-
 		return bookService.findAll(page, limit, sort, order, search, status);
 	}
 
@@ -45,12 +46,12 @@ public class BookController {
 	}
 
 	@PostMapping()
-	public BookDTO insertBook(@RequestBody BookDTO book) {
+	public BookDTO insertBook(@Valid @RequestBody BookDTO book) {
 		return bookService.save(book);
 	}
 
 	@PutMapping(value = "/{id}")
-	public BookDTO editBook(@RequestBody BookDTO book, @PathVariable long id) {
+	public BookDTO editBook(@Valid @RequestBody BookDTO book, @PathVariable long id) {
 		book.setId(id);
 		return bookService.save(book);
 	}

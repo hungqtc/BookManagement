@@ -62,7 +62,7 @@ public class CommentServiceImpl implements CommentService {
 		}
 		CustomUserDetails userDetails = SecurityUtil.getPrincipal();
 		BookEntity bookEntity = bookRepository.findById(bookId).get();
-		UserEntity userEntity = userRepository.findByName(userDetails.getUsername());
+		UserEntity userEntity = userRepository.findByUserName(userDetails.getUsername());
 		commentEntity.setBook(bookEntity);
 		commentEntity.setUser(userEntity);
 		commentEntity = commentRepository.save(commentEntity);

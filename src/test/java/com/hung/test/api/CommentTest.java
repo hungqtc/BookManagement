@@ -45,8 +45,7 @@ public class CommentTest {
 		List<CommentDTO> listComment = Arrays.asList(comment, comment2);
 		given(commentService.findAllByBook(1)).willReturn(listComment);
 
-		mvc.perform(get("/api/comments")
-				.param("bookId", "1")
+		mvc.perform(get("/api/comments/{bid}",1)
 				.contentType(MediaType.APPLICATION_JSON))
 				.andDo(print())
 				.andExpect(status().isOk())
@@ -56,26 +55,12 @@ public class CommentTest {
 	}
 
 	@Test
-	public void getCommentById() throws Exception {
-		long id = 1;
-		CommentDTO comment = new CommentDTO("hay", "Ngồi Khóc Trên Cây");
-		given(commentService.findById(id)).willReturn(comment);
-
-		mvc.perform(get("/api/comments/{id}", id).contentType(MediaType.APPLICATION_JSON))
-				.andDo(print())
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.message", is(comment.getMessage())))
-				.andExpect(jsonPath("$.bookTitle", is(comment.getBookTitle())));
-	}
-
-	@Test
 	public void insertComment() throws Exception {
 		CommentDTO comment = new CommentDTO("hay", "Ngồi Khóc Trên Cây");
 		long bookId = 1;
 		given(commentService.save(comment, bookId)).willReturn(comment);
 		
-		mvc.perform(MockMvcRequestBuilders.post("/api/comments")
-				.param("bookId", "1")
+		mvc.perform(MockMvcRequestBuilders.post("/api/comments/{bid}",bookId)
 			    .content(asJsonString( new CommentDTO("hay", "Ngồi Khóc Trên Cây"))) 
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
@@ -91,8 +76,7 @@ public class CommentTest {
 		comment.setId(id);
 		given(commentService.save(comment, id)).willReturn(comment);
 		
-		mvc.perform(MockMvcRequestBuilders.put("/api/comments/{id}", id)
-				.param("bookId", "1")
+		mvc.perform(MockMvcRequestBuilders.put("/api/comments/{bid}/{id}", id, id)
 				.content(asJsonString(new CommentDTO("hay", "Ngồi Khóc Trên Cây"))) 
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))

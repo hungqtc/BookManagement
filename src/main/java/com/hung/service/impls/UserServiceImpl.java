@@ -47,12 +47,12 @@ public class UserServiceImpl implements UserService {
 		UserEntity userEntity = new UserEntity();
 		if (userDTO.getId() != null) {
 			UserEntity oldUserEntity = userRepository.findById(userDTO.getId()).get();
-			if (!userDTO.getName().equals(oldUserEntity.getName()) && (userRepository.findByName(userDTO.getName()) != null)) {
+			if (!userDTO.getUsername().equals(oldUserEntity.getUsername()) && (userRepository.findByUserName(userDTO.getUsername()) != null)) {
 				throw new UserExistionException();
 			}
 			userEntity = userConverter.toEntity(userDTO, oldUserEntity);
 		} else {
-			if (userRepository.findByName(userDTO.getName()) != null) {
+			if (userRepository.findByUserName(userDTO.getUsername()) != null) {
 				throw new UserExistionException();
 			}
 			userEntity = userConverter.toEntity(userDTO);
@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-		UserEntity user = userRepository.findByName(username);
+		UserEntity user = userRepository.findByUserName(username);
 		if (user == null) {
 			throw new UsernameNotFoundException(username);
 		}
