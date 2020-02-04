@@ -12,13 +12,9 @@ import com.hung.entity.UserEntity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 @AllArgsConstructor
 @Data
-@Getter
-@Setter
 public class CustomUserDetails implements UserDetails {
 
 	UserEntity user;

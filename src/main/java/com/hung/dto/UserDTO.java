@@ -8,15 +8,14 @@ import javax.validation.constraints.NotBlank;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@EqualsAndHashCode(callSuper=false)
 public class UserDTO extends BaseDTO{
 	@NotBlank(message = "Please provide mail")
 	@Email(message = "Please provide correct email")
@@ -24,5 +23,5 @@ public class UserDTO extends BaseDTO{
 	@NotBlank(message = "Please provide password")
 	private String password;
 	private int status;
-	private List<String> roles = new ArrayList();
+	private List<String> roles = new ArrayList<String>();
 }

@@ -6,16 +6,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+
+import com.hung.constants.CommonConstant;
 @Configuration
 public class MailConfig {
 	@Bean
     public JavaMailSender getJavaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost("smtp.gmail.com");
+        mailSender.setHost(CommonConstant.HOST);
         mailSender.setPort(587);
  
-        mailSender.setUsername("hungqtc97@gmail.com");
-        mailSender.setPassword("hung1231");
+        mailSender.setUsername(CommonConstant.EMAIL);
+        mailSender.setPassword(CommonConstant.PASSWORD);
  
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
