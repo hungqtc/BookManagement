@@ -1,5 +1,5 @@
 package com.hung.exceptions;
 
-public class BookExistionException  extends RuntimeException {
+public class StatusException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 }

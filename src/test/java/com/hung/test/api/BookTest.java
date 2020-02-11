@@ -50,7 +50,7 @@ public class BookTest {
 		bookOutput.setPage(1);
 		bookOutput.setTotalPage(3);
 		bookOutput.setListResult(listBook);
-		given(bookService.findAll(1, 2, "ASC", "title", null)).willReturn(bookOutput);
+		given(bookService.findAll(1, 2, "ASC", "title", null,1)).willReturn(bookOutput);
 
 		mvc.perform(get("/api/books")
 				.param("page", "1")
@@ -73,7 +73,7 @@ public class BookTest {
 		bookOutput.setPage(1);
 		bookOutput.setTotalPage(1);
 		bookOutput.setListResult(listBook);
-		given(bookService.findAll(1, 2, "ASC", "title", "ngoi")).willReturn(bookOutput);
+		given(bookService.findAll(1, 2, "ASC", "title", "ngoi",1)).willReturn(bookOutput);
 
 		mvc.perform(get("/api/books")
 			.param("page", "1")

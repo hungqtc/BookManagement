@@ -1,5 +1,7 @@
 package com.hung.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -21,4 +23,7 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
 	@Modifying
 	@Query("delete from CommentEntity c where c.book.id = ?1")
 	void deleteByBook(long id);
+	
+	@Query("select c from CommentEntity c where c.book.id = ?1")
+	List<CommentEntity> findByBook(long id);
 }

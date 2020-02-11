@@ -40,39 +40,27 @@ public class CommentTest {
 	public void getComment() throws Exception {
 		List<String> roles = new ArrayList<>();
 		roles.add("ADMIN");
-		CommentDTO comment = new CommentDTO("hay", "Ngồi Khóc Trên Cây");
-		CommentDTO comment2 = new CommentDTO("hay qua", "Ngồi Khóc Trên Cây");
+		CommentDTO comment = new CommentDTO("hay");
+		CommentDTO comment2 = new CommentDTO("hay qua");
 		List<CommentDTO> listComment = Arrays.asList(comment, comment2);
-		given(commentService.findAll()).willReturn(listComment);
+		given(commentService.findAllByBook(1)).willReturn(listComment);
 
-		mvc.perform(get("/api/comments").contentType(MediaType.APPLICATION_JSON))
+		mvc.perform(get("/api/comments/{bid}",1)
+				.contentType(MediaType.APPLICATION_JSON))
 				.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(2)))
-				.andExpect(jsonPath("$[0].message", is(listComment.get(0).getMessage())))
-				.andExpect(jsonPath("$[0].bookTitle", is(listComment.get(0).getBookTitle())));
-	}
-
-	@Test
-	public void getCommentById() throws Exception {
-		long id = 1;
-		CommentDTO comment = new CommentDTO("hay", "Ngồi Khóc Trên Cây");
-		given(commentService.findById(id)).willReturn(comment);
-
-		mvc.perform(get("/api/comments/{id}", id).contentType(MediaType.APPLICATION_JSON))
-				.andDo(print())
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.message", is(comment.getMessage())))
-				.andExpect(jsonPath("$.bookTitle", is(comment.getBookTitle())));
+				.andExpect(jsonPath("$[0].message", is(listComment.get(0).getMessage())));
 	}
 
 	@Test
 	public void insertComment() throws Exception {
-		CommentDTO comment = new CommentDTO("hay", "Ngồi Khóc Trên Cây");
-		given(commentService.save(comment)).willReturn(comment);
+		CommentDTO comment = new CommentDTO("hay");
+		long bookId = 1;
+		given(commentService.save(comment, bookId)).willReturn(comment);
 		
-		mvc.perform(MockMvcRequestBuilders.post("/api/comments")
-			    .content(asJsonString( new CommentDTO("hay", "Ngồi Khóc Trên Cây"))) 
+		mvc.perform(MockMvcRequestBuilders.post("/api/comments/{bid}",bookId)
+			    .content(asJsonString( new CommentDTO("hay"))) 
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 				.andDo(print())
@@ -82,13 +70,13 @@ public class CommentTest {
 	
 	@Test
 	public void editComment() throws Exception {
-		CommentDTO comment = new CommentDTO("hay", "Ngồi Khóc Trên Cây");
+		CommentDTO comment = new CommentDTO("hay");
 		long id = 1;
 		comment.setId(id);
-		given(commentService.save(comment)).willReturn(comment);
+		given(commentService.save(comment, id)).willReturn(comment);
 		
-		mvc.perform(MockMvcRequestBuilders.put("/api/comments/{id}", id)
-				.content(asJsonString(new CommentDTO("hay", "Ngồi Khóc Trên Cây"))) 
+		mvc.perform(MockMvcRequestBuilders.put("/api/comments/{bid}/{id}", id, id)
+				.content(asJsonString(new CommentDTO("hay"))) 
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 				.andDo(print())
@@ -98,16 +86,9 @@ public class CommentTest {
 	
 	@Test
 	public void deleteComment() throws Exception {
-		List<Long> list = new ArrayList<>();
-		list.add((long) 5);
-		list.add((long) 1);
-		
-		mvc.perform(MockMvcRequestBuilders.delete("/api/comments") 
-			    .content(asJsonString(list))
-				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
-				.andDo(print())
+		mvc.perform( MockMvcRequestBuilders.delete("/api/comments/{id}", 1))
 				.andExpect(status().isOk());
-	}
+		}
 
 	public static String asJsonString(final Object obj) {
 	    try {

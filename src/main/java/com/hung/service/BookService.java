@@ -6,7 +6,7 @@ import com.hung.dto.output.BookOutput;
 
 public interface BookService {
 	
-	BookOutput findAll(Integer page, Integer limit, String sort, String order, String search);
+	BookOutput findAll(Integer page, Integer limit, String sort, String order, String search, Integer status);
 
 	BookDTO findById(long id);
 

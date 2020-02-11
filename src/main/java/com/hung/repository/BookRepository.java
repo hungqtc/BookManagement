@@ -17,9 +17,9 @@ public interface BookRepository extends JpaRepository<BookEntity, Long> {
 	@Query("select b from BookEntity b where b.title like ?1 or b.author like ?2")
 	List<BookEntity> findByTitleOrAuthor(String title, String author, Pageable pageable);
 
-	@Query("select b from BookEntity b where b.title like ?1 or b.author like ?2 and b.status = ?3")
+	@Query("select b from BookEntity b where b.noUtf8Title like ?1 or b.noUtf8Author like ?2 and b.status = ?3")
 	List<BookEntity> findByTitleOrAuthor(String title, String author, int status, Pageable pageable);
-
+	
 	BookEntity findByTitle(String title);
 
 	List<BookEntity> findByStatus(int status, Pageable pageable);
@@ -33,6 +33,6 @@ public interface BookRepository extends JpaRepository<BookEntity, Long> {
 	@Query("select count(1) from BookEntity b where b.title = ?1")
 	int countByTitle(String title);
 
-	@Query("select count(1) from BookEntity b where b.title like ?1 or b.author like ?2 and b.status = ?3")
+	@Query("select count(1) from BookEntity b where b.noUtf8Title like ?1 or b.noUtf8Author like ?2 and b.status = ?3")
 	int countByTitleOrAuthor(String title, String author, int status);
 }
